@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">BOOK Exchange</string>
+    <string name="facebook_app_id">2252490391630973</string>
+    <string name="fb_login_protocol_scheme">fb2252490391630973</string>
+    <string name="ex_rayan_ak_hotmail_fr">ex: rayan.ak@hotmail.fr</string>
+    <string name="pssword">password</string>
+    <string name="inscription">S\'inscrire</string>
+
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_jhgfd">jhgfd</string>
+    <string name="Open">Open navigation drawer</string>
+    <string name="Close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="title_activity_profil_nav">profilNav</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>
