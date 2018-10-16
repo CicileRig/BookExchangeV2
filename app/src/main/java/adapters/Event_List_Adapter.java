@@ -44,7 +44,7 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
 
         switch (v.getId())
         {
-            case R.id.event_name:
+            case R.id.book_name:
                 Snackbar.make(v, "Release date " + event.getEvent_name(), Snackbar.LENGTH_LONG)
                         .setAction("No action", null).show();
                 break;
@@ -67,7 +67,7 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.row_event_item, parent, false);
-            viewHolder.eventName =  convertView.findViewById(R.id.event_name);
+            viewHolder.eventName =  convertView.findViewById(R.id.book_name);
             viewHolder.eventDate =  convertView.findViewById(R.id.event_date);
             viewHolder.eventHour =  convertView.findViewById(R.id.event_hour);
 

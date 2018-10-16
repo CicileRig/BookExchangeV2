@@ -41,7 +41,7 @@ public class Book_List_Adapter extends ArrayAdapter<Book> implements View.OnClic
 
         switch (v.getId())
         {
-            case R.id.event_name:
+            case R.id.book_name:
                 Snackbar.make(v, "Release date " +book.getTitle(), Snackbar.LENGTH_LONG)
                         .setAction("No action", null).show();
                 break;
@@ -64,7 +64,7 @@ public class Book_List_Adapter extends ArrayAdapter<Book> implements View.OnClic
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.row_book_item, parent, false);
-            viewHolder.bookTitle =  convertView.findViewById(R.id.event_name);
+            viewHolder.bookTitle =  convertView.findViewById(R.id.book_name);
 
             result=convertView;
 
