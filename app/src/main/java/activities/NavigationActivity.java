@@ -135,7 +135,12 @@ public class NavigationActivity extends AppCompatActivity {
 
     private void configureDefaultItemNavigationDrawer( int id_item) {
 
-        if(id_item == R.id.nav_library)
+        if (id_item == R.id.nav_profil)
+        {
+            Intent intent = new Intent(NavigationActivity.this, ProfilActivity.class);
+            startActivity(intent);
+        }
+        else if(id_item == R.id.nav_library)
         {
             Library_fragment library_fragment = new Library_fragment();
             fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, library_fragment).commit();

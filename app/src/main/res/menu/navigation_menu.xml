@@ -3,6 +3,11 @@
 
         <group android:checkableBehavior="single">
             <item
+                android:id="@+id/nav_profil"
+                android:icon="@drawable/ic_profil"
+                android:title="Profil"
+                android:visible="true" />
+            <item
                 android:id="@+id/nav_library"
                 android:icon="@drawable/biblio"
                 android:title="Bibliothèque"

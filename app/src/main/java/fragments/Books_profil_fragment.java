@@ -1,6 +1,8 @@
 package fragments;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -20,6 +22,8 @@ import com.example.bcs.bookexchangev2.R;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import activities.NavigationActivity;
+import activities.ProfilActivity;
 import adapters.Book_List_Adapter;
 
 import classes.Book;
@@ -65,18 +69,26 @@ public class Books_profil_fragment extends Fragment {
 
         book_listView.setAdapter(booksAdapter);
 
-
-
         book_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // Get the selected item text from ListView
                 Book value = (Book) adapterView.getItemAtPosition(i);
                 Log.d("Listview", value.getTitle());
+                My_Book_Detail_Fragment my_book_detail_fragment = new My_Book_Detail_Fragment();
+
+                Bundle args = new Bundle();
+                args.putSerializable("book", value);
+                my_book_detail_fragment.setArguments(args);
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.dynamic_fragment_frame_layout, my_book_detail_fragment);
+                transaction.commit();
             }
         });
 
         return view;
     }
+
 
 }

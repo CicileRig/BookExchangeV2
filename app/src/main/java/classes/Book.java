@@ -1,9 +1,10 @@
 package classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Book {
+public class Book implements Serializable{
 
     private String id;
     private ArrayList<String> ISBNList;
@@ -12,6 +13,7 @@ public class Book {
     private ArrayList<String> categories;
     private String language;
     private String imageURL;
+    private String description;
 
     public Book(String id, ArrayList<String> ISBNList, String title, ArrayList<String> authors, ArrayList<String> categories, String language) {
         this.id = id;
@@ -86,10 +88,41 @@ public class Book {
         this.imageURL = imageURL;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String authorsToString()
     {
-        String result = "";
+        String result = "Par : ";
         Iterator<String> iterator = this.authors.iterator();
+        while (iterator.hasNext())
+        {
+            result = result + iterator.next()+"\n";
+        }
+        return result;
+    }
+
+    public String categoriesToString()
+    {
+        String result = "Catégories : ";
+        Iterator<String> iterator = this.categories.iterator();
+        while (iterator.hasNext())
+        {
+            result = result + iterator.next()+"\n";
+        }
+        return result;
+    }
+
+
+    public String ISBNToString(){
+
+        String result = "ISBN : ";
+        Iterator<String> iterator = this.ISBNList.iterator();
         while (iterator.hasNext())
         {
             result = result + iterator.next()+"\n";
