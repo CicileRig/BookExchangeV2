@@ -1,6 +1,9 @@
 package adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,27 +11,35 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bcs.bookexchangev2.R;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import classes.Book;
 
-public class Book_List_Adapter extends ArrayAdapter<Book> implements View.OnClickListener{
+public class Book_List_Adapter extends ArrayAdapter<Book>  implements View.OnClickListener{
     private ArrayList<Book> dataSet;
     Context mContext;
+    Activity activity;
 
     // View lookup cache
     private static class ViewHolder {
         TextView bookTitle;
+        TextView bookAuthors;
+        ImageView bookImage ;
     }
 
-    public Book_List_Adapter(ArrayList<Book> data, Context context) {
-        super(context, R.layout.row_book_item, data);
+    public Book_List_Adapter(ArrayList<Book> data, Activity activity) {
+        super(activity, R.layout.row_book_item, data);
         this.dataSet = data;
-        this.mContext=context;
+        this.mContext=activity;
+        this.activity = activity;
 
     }
 
@@ -65,6 +76,8 @@ public class Book_List_Adapter extends ArrayAdapter<Book> implements View.OnClic
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.row_book_item, parent, false);
             viewHolder.bookTitle =  convertView.findViewById(R.id.book_name);
+            viewHolder.bookAuthors =  convertView.findViewById(R.id.book_authors);
+            viewHolder.bookImage =  convertView.findViewById(R.id.book_image);
 
             result=convertView;
 
@@ -79,6 +92,19 @@ public class Book_List_Adapter extends ArrayAdapter<Book> implements View.OnClic
         lastPosition = position;
 
         viewHolder.bookTitle.setText(book.getTitle());
+        viewHolder.bookAuthors.setText(book.authorsToString());
+
+        URL url ;
+        try {
+            url = new URL(book.getImageURL());
+            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            viewHolder.bookImage.setImageBitmap(bmp);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // Return the completed view to render on screen
         return convertView;
     }

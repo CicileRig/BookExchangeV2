@@ -22,64 +22,60 @@
             tools:layout_editor_absoluteY="162dp">
 
 
-            <Button
-                android:id="@+id/go_to-event_button"
-                android:layout_width="117dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/button_style"
-                android:text="Supprimer"
-                android:textAllCaps="false"
-                android:textColor="@color/cardview_light_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.657"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
-                app:layout_constraintVertical_bias="0.25" />
-
             <TextView
                 android:id="@+id/book_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:text="Titre"
-                app:layout_constraintEnd_toEndOf="@+id/go_to-event_button"
-                app:layout_constraintHorizontal_bias="0.458"
-                app:layout_constraintStart_toStartOf="@+id/go_to-event_button"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/book_image"
                 android:layout_width="141dp"
                 android:layout_height="192dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="20dp"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/alchimiste_couv" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/book_authors"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:text="TextView"
-                app:layout_constraintTop_toBottomOf="@+id/book_name"
-                tools:layout_editor_absoluteX="227dp" />
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Auteurs"
+                android:textSize="18sp"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintTop_toBottomOf="@+id/book_name" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="33dp"
+                android:layout_height="51dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/etiquette_book" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 

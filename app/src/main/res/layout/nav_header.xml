@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
-    android:background="@drawable/fond_profil"
+    android:layout_height="190dp"
     android:gravity="bottom"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/overlapImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:background="@drawable/avatarchat" />
-
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="10dp"
-        android:text="TextView"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="40dp"
+        app:srcCompat="@drawable/simple_logo" />
 </LinearLayout>

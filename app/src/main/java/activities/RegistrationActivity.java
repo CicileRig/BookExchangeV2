@@ -1,9 +1,5 @@
 package activities;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +22,6 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Calendar;
-
 import classes.User;
 import controllers.DataBaseManager;
 
@@ -37,14 +29,12 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     private static final String TAG = "EmailPassword";
-    private ImageButton datepickerdialogbutton = null;
     private TextView selecteddate= null;
     private Button registerBtn =null;
     private EditText nameEditText;
     private EditText surnameEditText;
     private EditText adressEditText;
     private EditText passwrdEditText;
-    private TextView burthDateEditText;
 
     private FirebaseAuth mAuth;
     private DataBaseManager dataBaseManager = new DataBaseManager();
@@ -61,7 +51,6 @@ public class RegistrationActivity extends AppCompatActivity {
         surnameEditText = findViewById(R.id.surnameEditText);
         adressEditText = findViewById(R.id.adressEditText);
         passwrdEditText = findViewById(R.id.passwordEditText);
-        burthDateEditText = findViewById(R.id.burthDateEditText);
 
         // focus change des views :
         nameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -113,34 +102,17 @@ public class RegistrationActivity extends AppCompatActivity {
         });
 
 
-        /********************************        Boite de dialog datepicker           **********************************/
-
-        datepickerdialogbutton = (ImageButton) findViewById(R.id.button1);
-        selecteddate = (TextView) findViewById(R.id.burthDateEditText);
-
-
-        Calendar CurDate = Calendar.getInstance();
-        DatePickerDialogClass dpD = new DatePickerDialogClass();
-
-        datepickerdialogbutton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-
-                DialogFragment dialogfragment = new DatePickerDialogClass();
-                dialogfragment.show(getFragmentManager(), "Date Picker Dialog");
-
-            }
-        });
-
-
         /*******************************Validation de l'inscription ********************************/
-        registerBtn = findViewById(R.id.registerBtn);
+        registerBtn = findViewById(R.id.nextButton);
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createAccount(adressEditText.getText().toString(), passwrdEditText.getText().toString());
+                Intent intent = new Intent(RegistrationActivity.this, RegistrationActivity2.class);
+                User myUser = new User(nameEditText.getText().toString(), surnameEditText.getText().toString()
+                        , adressEditText.getText().toString(),passwrdEditText.getText().toString());
+                intent.putExtra("user", myUser);
+                startActivity(intent);
+               // createAccount(adressEditText.getText().toString(), passwrdEditText.getText().toString());
             }
         });
     }
@@ -164,9 +136,9 @@ public class RegistrationActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             activity.updateUI(user);
                             User myUser = new User(nameEditText.getText().toString(), surnameEditText.getText().toString()
-                                    , adressEditText.getText().toString(),passwrdEditText.getText().toString(),burthDateEditText.getText().toString());
+                                    , adressEditText.getText().toString(),passwrdEditText.getText().toString());
                             dataBaseManager.writeNewUser(myUser);
-                            Intent intent = new Intent(RegistrationActivity.this, ProfilActivity.class);
+                            Intent intent = new Intent(RegistrationActivity.this, RegistrationActivity2.class);
                             intent.putExtra("user", myUser);
                             startActivity(intent);
                         } else {
@@ -235,69 +207,6 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
         return valid;
-    }
-
-    public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState){
-            final Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK,this,year,month,day);
-            return datepickerdialog;
-        }
-
-
-        public static String getMonthName(int month){
-            switch(month+1){
-                case 1:
-                    return "Janvier";
-
-                case 2:
-                    return "Fevrier";
-
-                case 3:
-                    return "Mars";
-
-                case 4:
-                    return "Avril";
-
-                case 5:
-                    return "Mai";
-
-                case 6:
-                    return "Join";
-
-                case 7:
-                    return "Juillet";
-
-                case 8:
-                    return "Aout";
-
-                case 9:
-                    return "Septembre";
-
-                case 10:
-                    return "Octobre";
-
-                case 11:
-                    return "Novembre";
-
-                case 12:
-                    return "Decembre";
-            }
-
-            return "";
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day){
-
-            TextView textview = getActivity().findViewById(R.id.burthDateEditText);
-            textview.setText(day + "  " + getMonthName(month) + "  " + year);
-        }
     }
 
 }

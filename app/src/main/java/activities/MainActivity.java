@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    private void signIn(String email, String password) {
+    public void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
             return;
@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            User myUser = new User(user.getEmail().toString());
                             Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
                             startActivity(intent);
                         } else {
@@ -138,7 +137,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public void updateUI(FirebaseUser user) {
         if (user != null) {
-
+                /*Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
+                startActivity(intent);*/
         } else {
 
         }

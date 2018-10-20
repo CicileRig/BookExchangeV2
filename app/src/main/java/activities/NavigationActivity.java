@@ -19,6 +19,10 @@ import android.widget.Toast;
 
 
 import com.example.bcs.bookexchangev2.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomMenuButton;
 
@@ -147,11 +151,13 @@ public class NavigationActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, events_fragment).commit();
             dl.closeDrawers();
         }else if (id_item == R.id.nav_log_out){
-
             dl.closeDrawers();
-            Toast.makeText(NavigationActivity.this, "deconnexion",Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
+            startActivity(intent);
         }
     }
+
 
 
     private void configureNavigationDrawer(NavigationView nv)

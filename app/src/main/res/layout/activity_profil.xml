@@ -20,11 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/background_light"
-            android:fitsSystemWindows="true"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_nav_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:fitsSystemWindows="true">
 
 
             <android.support.design.widget.BottomNavigationView
@@ -47,7 +43,7 @@
                 android:id="@+id/main.appbar"
                 android:layout_width="match_parent"
                 android:layout_height="270dp"
-                android:background="@drawable/fond_profil"
+                android:background="@drawable/fond_pf"
                 android:fitsSystemWindows="true"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -68,15 +64,13 @@
                         android:gravity="center_horizontal"
                         android:orientation="vertical">
 
-                        <ImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/overlapImage"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="100dp"
-                            android:adjustViewBounds="true"
-                            android:background="@drawable/avatarchat" />
+                            android:layout_marginTop="100dp" />
 
                         <TextView
                             android:id="@+id/username"
@@ -105,15 +99,16 @@
                 android:id="@+id/nested_scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:paddingBottom="60dp"
+                android:background="#90dad7d7"
                 android:fillViewport="true"
-                >
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <FrameLayout
                     android:id="@+id/dynamic_fragment_frame_layout"
-                    android:layout_gravity="top"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_width="match_parent">
+                    android:layout_gravity="top">
 
                 </FrameLayout>
 
@@ -126,11 +121,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            android:background="@drawable/fond_menu"
             app:headerLayout="@layout/nav_header"
-            app:itemIconTint="@color/bottom_nav_item_color"
-            app:itemTextColor="@color/bottom_nav_item_color"
+            app:itemIconTint="@color/cardview_light_background"
+            app:itemTextColor="@color/cardview_light_background"
             app:menu="@menu/navigation_menu"
-            app:theme="@style/NavigationViewStyle"/>
+            app:theme="@style/NavigationViewStyle" />
 
     </android.support.v4.widget.DrawerLayout>
 

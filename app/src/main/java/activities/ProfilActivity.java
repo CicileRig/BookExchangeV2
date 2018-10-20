@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -16,43 +18,52 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
-import com.nightonke.boommenu.BoomButtons.HamButton;
-import com.nightonke.boommenu.BoomMenuButton;
 
 import classes.User;
 import controllers.DataBaseManager;
+import controllers.ImageManager;
 import fragments.Books_profil_fragment;
 import fragments.Events_profil_Fragment;
 
 public class ProfilActivity extends AppCompatActivity {
 
     private TextView userTextView = null;
+    private ImageView userProfilPhoto = null;
     private BottomNavigationView bottomNavigationView;
     private static DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
 
     private android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
-
     private DataBaseManager dataBaseManager = new DataBaseManager();
+    private ImageManager imageManager = new ImageManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
         /*************************************** Display name surname of user ****************************************/
 
         userTextView = findViewById(R.id.username);
+        userProfilPhoto = findViewById(R.id.overlapImage);
+
         dataBaseManager.getUserById(new DataBaseManager.ResultGetter<User>() {
             @Override
             public void onResult(User user) {
                 userTextView.setText(user.getName().toString()+" "+user.getSurname().toString());
-                Toast toast = Toast.makeText(ProfilActivity.this,user.getName().toString()+" "+user.getSurname().toString(), Toast.LENGTH_LONG );
-                toast.show();
+                userProfilPhoto.setImageBitmap(imageManager.decodeBase64(user.getProfilPhotoUri()));
             }
         });
 

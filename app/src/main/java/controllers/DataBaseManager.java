@@ -1,6 +1,8 @@
 package controllers;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.util.Base64;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -10,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -58,9 +61,14 @@ public class DataBaseManager {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
+                        if(user.getName() != null)
                         user.setName( user.getName().toString());
+                        if(user.getSurname() != null)
                         user.setSurname(user.getSurname().toString());
-                        user.setAge(user.getAge().toString());
+                        if(user.getAge() != null)
+                            user.setAge(user.getAge().toString());
+                        if(user.getProfilPhotoUri() != null)
+                            user.setProfilPhotoUri(user.getProfilPhotoUri().toString());
                         user.setMailAdress(user.getMailAdress().toString());
                         user.setPassword(user.getPassword().toString());
                         getter.onResult(user);

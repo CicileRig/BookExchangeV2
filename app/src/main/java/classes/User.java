@@ -13,6 +13,7 @@ public class User implements Serializable{
     private String age;
     private String password;
     private ArrayList<Book> booksList;
+    private String profilPhotoUri;
 
     public  User(){
 
@@ -29,13 +30,10 @@ public class User implements Serializable{
         this.booksList = booksList;
     }
 
-
-
-    public User(String name, String surname, String mailAdress, String password, String age) {
+    public User(String name, String surname, String mailAdress, String password) {
         this.name = name;
         this.surname = surname;
         this.mailAdress = mailAdress;
-        this.age = age;
         this.password = password;
     }
 
@@ -91,6 +89,13 @@ public class User implements Serializable{
         this.booksList = booksList;
     }
 
+    public String getProfilPhotoUri() {
+        return profilPhotoUri;
+    }
+
+    public void setProfilPhotoUri(String profilPhotoUri) {
+        this.profilPhotoUri = profilPhotoUri;
+    }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -99,7 +104,7 @@ public class User implements Serializable{
         result.put("mailAdress", mailAdress);
         result.put("password", password);
         result.put("age", age);
-
+        result.put("profilPhotoUri", profilPhotoUri);
         return result;
     }
 }

@@ -1,6 +1,7 @@
 package classes;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Book {
 
@@ -10,6 +11,7 @@ public class Book {
     private ArrayList<String> authors;
     private ArrayList<String> categories;
     private String language;
+    private String imageURL;
 
     public Book(String id, ArrayList<String> ISBNList, String title, ArrayList<String> authors, ArrayList<String> categories, String language) {
         this.id = id;
@@ -20,10 +22,12 @@ public class Book {
         this.language = language;
     }
 
-    public Book(String id, String title, String language) {
+    public Book(String id, String title, ArrayList<String> authorsList, String language, String imageURL) {
         this.id = id;
         this.title = title;
         this.language = language;
+        this.setAuthors(authorsList);
+        this.imageURL = imageURL;
     }
 
     public String getId() {
@@ -72,5 +76,24 @@ public class Book {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public String authorsToString()
+    {
+        String result = "";
+        Iterator<String> iterator = this.authors.iterator();
+        while (iterator.hasNext())
+        {
+            result = result + iterator.next()+"\n";
+        }
+        return result;
     }
 }

@@ -97,13 +97,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            android:background="@drawable/fond_menu"
             app:headerLayout="@layout/nav_header"
-            app:itemIconTint="@color/bottom_nav_item_color"
-            app:itemTextColor="@color/bottom_nav_item_color"
+            app:itemIconTint="@color/cardview_light_background"
+            app:itemTextColor="@color/cardview_light_background"
             app:menu="@menu/navigation_menu"
-            app:theme="@style/NavigationViewStyle">
-
-        </android.support.design.widget.NavigationView>
+            app:theme="@style/NavigationViewStyle" />
 
     </android.support.v4.widget.DrawerLayout>
 
