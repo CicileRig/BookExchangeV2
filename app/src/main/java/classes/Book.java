@@ -7,7 +7,6 @@ import java.util.Iterator;
 public class Book implements Serializable{
 
     private String id;
-    private ArrayList<String> ISBNList;
     private String title;
     private ArrayList<String> authors;
     private ArrayList<String> categories;
@@ -15,13 +14,14 @@ public class Book implements Serializable{
     private String imageURL;
     private String description;
 
-    public Book(String id, ArrayList<String> ISBNList, String title, ArrayList<String> authors, ArrayList<String> categories, String language) {
+    public Book(String id, String title, ArrayList<String> authors, ArrayList<String> categories, String language, String description, String imageURL) {
         this.id = id;
-        this.ISBNList = ISBNList;
         this.title = title;
         this.authors = authors;
         this.categories = categories;
         this.language = language;
+        this.description = description;
+        this.imageURL = imageURL;
     }
 
     public Book(String id, String title, ArrayList<String> authorsList, String language, String imageURL) {
@@ -36,9 +36,6 @@ public class Book implements Serializable{
         return id;
     }
 
-    public ArrayList<String> getISBNList() {
-        return ISBNList;
-    }
 
     public String getTitle() {
         return title;
@@ -60,9 +57,6 @@ public class Book implements Serializable{
         this.id = id;
     }
 
-    public void setISBNList(ArrayList<String> ISBNList) {
-        this.ISBNList = ISBNList;
-    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -118,15 +112,4 @@ public class Book implements Serializable{
         return result;
     }
 
-
-    public String ISBNToString(){
-
-        String result = "ISBN : ";
-        Iterator<String> iterator = this.ISBNList.iterator();
-        while (iterator.hasNext())
-        {
-            result = result + iterator.next()+"\n";
-        }
-        return result;
-    }
 }

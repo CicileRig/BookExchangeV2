@@ -54,14 +54,6 @@ public class My_Book_Detail_Fragment extends Fragment {
             book_categories.setVisibility(View.GONE);
         }
 
-        book_isbn= view.findViewById(R.id.book_isbn);
-        if(book.getISBNList() != null)
-        {
-            book_isbn.setText(book.ISBNToString());
-        }else{
-            book_isbn.setVisibility(View.GONE);
-        }
-
         book_description= view.findViewById(R.id.book_description);
         if(book.getDescription() != null)
         {

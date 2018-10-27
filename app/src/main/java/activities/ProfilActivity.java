@@ -26,11 +26,15 @@ import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
 
+import classes.Book;
 import classes.User;
+import controllers.BooksAPIManager;
 import controllers.DataBaseManager;
 import controllers.ImageManager;
 import fragments.Books_profil_fragment;
 import fragments.Events_profil_Fragment;
+
+
 
 public class ProfilActivity extends AppCompatActivity {
 
@@ -94,6 +98,7 @@ public class ProfilActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
         configureBottomNavigationBar(bottomNavigationView);
 
+
     }
 
     @SuppressLint("MissingSuperCall")
@@ -129,7 +134,18 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                //do the search here
+              /* BooksAPIManager booksAPIManager = new BooksAPIManager(query);
+                booksAPIManager.delegate = ProfilActivity.this;
+                booksAPIManager.execute();*/
+
+                new BooksAPIManager(query){
+                    @Override
+                    protected void onPostExecute(Book book) {
+                        super.onPostExecute(book);
+                        userTextView.setText(book.getTitle());
+                    }
+                }.execute();
+
                 return false;
             }
 
@@ -181,6 +197,5 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }

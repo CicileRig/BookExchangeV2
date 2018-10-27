@@ -50,24 +50,14 @@
         app:layout_constraintTop_toBottomOf="@+id/book_name" />
 
     <TextView
-        android:id="@+id/book_isbn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="ISBN"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/book_authors"
-        app:layout_constraintTop_toBottomOf="@+id/book_authors" />
-
-    <TextView
         android:id="@+id/book_categorie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Catégories"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/book_isbn"
-        app:layout_constraintTop_toBottomOf="@+id/book_isbn" />
+        app:layout_constraintStart_toStartOf="@+id/book_authors"
+        app:layout_constraintTop_toBottomOf="@+id/book_authors" />
 
     <TextView
         android:id="@+id/book_language"
