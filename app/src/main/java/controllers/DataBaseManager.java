@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import activities.MainActivity;
 import classes.Book;
 import classes.User;
 
@@ -80,57 +81,20 @@ public class DataBaseManager {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
-                        if(user.getName() != null)
-                        user.setName( user.getName().toString());
-                        if(user.getSurname() != null)
-                        user.setSurname(user.getSurname().toString());
-                        if(user.getAge() != null)
-                            user.setAge(user.getAge().toString());
-                        if(user.getProfilPhotoUri() != null)
-                            user.setProfilPhotoUri(user.getProfilPhotoUri().toString());
-                        user.setMailAdress(user.getMailAdress().toString());
-                        user.setPassword(user.getPassword().toString());
-                        getter.onResult(user);
-                    }
+                if(user.getName() != null)
+                    user.setName( user.getName().toString());
+                if(user.getSurname() != null)
+                    user.setSurname(user.getSurname().toString());
+                if(user.getAge() != null)
+                    user.setAge(user.getAge().toString());
+                if(user.getProfilPhotoUri() != null)
+                    user.setProfilPhotoUri(user.getProfilPhotoUri().toString());
+                user.setMailAdress(user.getMailAdress().toString());
+                user.setPassword(user.getPassword().toString());
+                getter.onResult(user);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    public void getUsersList(final ResultGetter<User> getter)
-    {
-
-        myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Boolean trouv = false;
-                HashMap value = (HashMap)dataSnapshot.getValue();
-                Set cles = value.keySet();
-                Iterator it = cles.iterator();
-
-                while (it.hasNext() & !trouv){
-                    String key = (String)it.next();
-                    Map<String, Object> postValues = (Map)value.get(key);
-
-                    if(key.equals(firebaseUser.getUid().toString())){
-
-                        user = new User("","","","","","","","");
-                        user.setName( postValues.get("name").toString());
-                        user.setSurname(postValues.get("surname").toString());
-                        user.setAge(postValues.get("age").toString());
-                        user.setMailAdress(postValues.get("mailAdress").toString());
-                        user.setPassword(postValues.get("password").toString());
-
-                        getter.onResult(user);
-                    }
                 }
 
-            }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -138,27 +102,23 @@ public class DataBaseManager {
         });
     }
 
-    public void getUserIsbnBooksList(final ResultGetter<ArrayList<Book>> getter)
+
+    public void getUsersList(final ResultGetter<ArrayList<String>> getter)
     {
-        final ArrayList<Book> bookIsbnList= new ArrayList<>();
-        myUsersRef = database.getReference("users").child(firebaseUser.getUid().toString()).child("books");
+
+        final ArrayList<String> usersIdList = new ArrayList<>();
         myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                Log.d("dataSnapshot", dataSnapshot.getValue().toString());
-               /* HashMap value = (HashMap)dataSnapshot.getValue();
+                HashMap value = (HashMap)dataSnapshot.getValue();
                 Set cles = value.keySet();
                 Iterator it = cles.iterator();
 
                 while (it.hasNext() ){
                     String key = (String)it.next();
-                    Map<String, Object> postValues = (Map)value.get(key);
-                        Book book = null;
-                        book.setId(postValues.get("isbn_13").toString());
-                        bookIsbnList.add(book);
+                        usersIdList.add(key);
                 }
-                getter.onResult(bookIsbnList);*/
+                getter.onResult(usersIdList);
 
             }
 
@@ -169,6 +129,45 @@ public class DataBaseManager {
         });
     }
 
+    public void getUserIsbnBooksList(String userId, final ResultGetter<ArrayList<Book>> getter)
+    {
+        final ArrayList<Book> bookIsbnList= new ArrayList<>();
+        myUsersRef = database.getReference("users").child(userId).child("books");
+        myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot != null){
+                    HashMap value = (HashMap)dataSnapshot.getValue();
+                    if (value != null){
+
+                        Set cles = value.keySet();
+                        Iterator it = cles.iterator();
+                        while (it.hasNext() ){
+                            String key = (String)it.next();
+                            Map<String, Object> postValues = (Map)value.get(key);
+                            Book book = new Book();
+                            book.setId(postValues.get("isbn_13").toString());
+                            bookIsbnList.add(book);
+                        }
+                        getter.onResult(bookIsbnList);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    public void deleteBookFromUser(Book book) {
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").child(firebaseUser.getUid().toString()).child("books").child(securityManager.md5Hash(book.getId())).removeValue();
+    }
     
     public interface ResultGetter<T> {
         void onResult(T t);

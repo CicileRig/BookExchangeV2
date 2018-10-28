@@ -1,5 +1,6 @@
 package fragments;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import classes.Book;
+import controllers.DataBaseManager;
 import controllers.ImageManager;
 
 public class My_Book_Detail_Fragment extends Fragment {
@@ -31,14 +34,17 @@ public class My_Book_Detail_Fragment extends Fragment {
     private ImageView book_image ;
 
     private ImageManager imageManager = new ImageManager();
+    private Button deleteBookBtn ;
+    private DataBaseManager dataBaseManager = new DataBaseManager();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.my_book_detail_fragment_layout,container, false);
 
-        Book book = (Book) getArguments().getSerializable("book");
-        Toast.makeText(getActivity(), book.getId(), Toast.LENGTH_LONG).show();
+        deleteBookBtn = view.findViewById(R.id.deleteBookBtn);
+
+        final Book book = (Book) getArguments().getSerializable("book");
 
         book_title = view.findViewById(R.id.book_name);
         book_title.setText(book.getTitle());
@@ -84,6 +90,15 @@ public class My_Book_Detail_Fragment extends Fragment {
             }
         }
 
+
+        /**************************************** Delete book action ***************************************/
+        deleteBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataBaseManager.deleteBookFromUser(book);
+                getActivity().getFragmentManager().popBackStack();
+            }
+        });
         return view;
     }
 

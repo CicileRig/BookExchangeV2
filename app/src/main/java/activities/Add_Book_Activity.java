@@ -2,7 +2,6 @@ package activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,8 +22,6 @@ import adapters.Book_List_Adapter;
 import classes.Book;
 import controllers.BooksAPIManager;
 import controllers.DataBaseManager;
-import fragments.Books_profil_fragment;
-import fragments.My_Book_Detail_Fragment;
 
 public class Add_Book_Activity extends AppCompatActivity {
 
@@ -118,9 +115,11 @@ public class Add_Book_Activity extends AppCompatActivity {
                 // Get the selected item text from ListView
                 Book book = (Book) adapterView.getItemAtPosition(i);
                 dataBaseManager.addBookToCurentUser(book);
-
                 Toast.makeText(Add_Book_Activity.this, "Livre Ajouté avec succes", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(Add_Book_Activity.this, NavigationActivity.class));
+
+                Intent intent = new Intent(Add_Book_Activity.this, NavigationActivity.class);
+                intent.putExtra("item_id",R.id.nav_books);
+                startActivity(intent);
             }
         });
 
@@ -131,7 +130,8 @@ public class Add_Book_Activity extends AppCompatActivity {
     public void onBackPressed()
     {
         //super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
-        Intent intent_profil = new Intent(Add_Book_Activity.this, NavigationActivity.class);
-        startActivity(intent_profil);
+        Intent intent = new Intent(Add_Book_Activity.this, NavigationActivity.class);
+        intent.putExtra("item_id",R.id.nav_books);
+        startActivity(intent);
     }
 }

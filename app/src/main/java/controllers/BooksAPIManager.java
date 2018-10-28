@@ -71,6 +71,11 @@ public class BooksAPIManager extends AsyncTask<Void, Void, ArrayList<Book> > {
 
 
                             isbn = getISBN13FromVolumeInfo(volumeInfo);
+
+                            if(isbn.equals(""))
+                            {
+                                isbn = getISBN10FromVolumeInfo(volumeInfo);
+                            }
                             title = volumeInfo.optString("title");
                             Log.d("tag", title);
 
@@ -133,6 +138,22 @@ public class BooksAPIManager extends AsyncTask<Void, Void, ArrayList<Book> > {
                 JSONObject industryIdentifier = industryIdentifiers.getJSONObject(i);
 
                 if (industryIdentifier.has("type") && industryIdentifier.get("type").equals("ISBN_13")) {
+                    return industryIdentifier.getString("identifier");
+                }
+            }
+        }
+
+        return "";
+    }
+
+    private String getISBN10FromVolumeInfo(JSONObject volumeInfo) throws JSONException {
+        if (volumeInfo.has("industryIdentifiers")) {
+            JSONArray industryIdentifiers = volumeInfo.getJSONArray("industryIdentifiers");
+
+            for (int i = 0; i < industryIdentifiers.length(); i++) {
+                JSONObject industryIdentifier = industryIdentifiers.getJSONObject(i);
+
+                if (industryIdentifier.has("type") && industryIdentifier.get("type").equals("ISBN_10")) {
                     return industryIdentifier.getString("identifier");
                 }
             }

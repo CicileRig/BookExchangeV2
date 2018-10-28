@@ -34,6 +34,10 @@ public class Book implements Serializable{
         this.imageURL = imageURL;
     }
 
+    public Book() {
+
+    }
+
     public String getId() {
         return isbn;
     }
@@ -118,6 +122,21 @@ public class Book implements Serializable{
         HashMap<String, Object> result = new HashMap<>();
         result.put("isbn_13", isbn);
         return result;
+    }
+
+    @Override
+    public boolean equals(Object v) {
+
+        if (v instanceof Book){
+            Book ptr = (Book) v;
+            if( ptr.getId()== this.getId()){
+                return  true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
 
 }

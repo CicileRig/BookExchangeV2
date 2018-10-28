@@ -24,6 +24,7 @@ import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
 import fragments.Books_fragment;
+import fragments.Books_profil_fragment;
 import fragments.Events_fragment;
 import fragments.Library_fragment;
 
@@ -97,9 +98,7 @@ public class NavigationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        //super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
-        Intent intent_profil = new Intent(NavigationActivity.this, ProfilActivity.class);
-        startActivity(intent_profil);
+        super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
     }
 
     @Override
@@ -155,7 +154,7 @@ public class NavigationActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, library_fragment).commit();
             dl.closeDrawers();
         }else if (id_item == R.id.nav_books){
-            Books_fragment books_fragment = new Books_fragment();
+            Books_profil_fragment books_fragment = new Books_profil_fragment();
             fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, books_fragment).commit();
             dl.closeDrawers();
 

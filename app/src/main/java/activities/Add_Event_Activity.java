@@ -19,8 +19,6 @@ public class Add_Event_Activity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        //super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
-        Intent intent_profil = new Intent(Add_Event_Activity.this, NavigationActivity.class);
-        startActivity(intent_profil);
+        super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
     }
 }

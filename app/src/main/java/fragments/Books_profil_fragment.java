@@ -18,16 +18,22 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import activities.Add_Book_Activity;
 import activities.NavigationActivity;
 import activities.ProfilActivity;
 import adapters.Book_List_Adapter;
 
 import classes.Book;
 import classes.User;
+import controllers.BooksAPIManager;
 import controllers.DataBaseManager;
 
 public class Books_profil_fragment extends Fragment {
@@ -45,22 +51,31 @@ public class Books_profil_fragment extends Fragment {
         View view = inflater.inflate(R.layout.books_fragment, container, false);
 
 
+        /*************************************** Populate books list ********************************************/
         books_list = new ArrayList<Book>();
         booksAdapter = new Book_List_Adapter(books_list, getActivity());
         book_listView = view.findViewById(R.id.books_list);
 
-        //books_list.add(new Book("id1", "livre 1 ",authorsBook1,  "Français", imageUrl));
-       /* dataBaseManager.getUserIsbnBooksList(new DataBaseManager.ResultGetter<ArrayList<Book>>() {
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+        dataBaseManager.getUserIsbnBooksList(userId, new DataBaseManager.ResultGetter<ArrayList<Book>>() {
             @Override
             public void onResult(ArrayList<Book> booksList) {
-                Toast.makeText(getActivity(), booksList.get(0).getId(), Toast.LENGTH_LONG).show();
-                books_list.addAll(booksList);
+
+                new BooksAPIManager(constructBooksIsbnRequest(booksList)){
+                    @Override
+                    protected void onPostExecute(ArrayList<Book> bookList) {
+                        super.onPostExecute(bookList);
+                        Book_List_Adapter booksAdapter = new Book_List_Adapter(bookList, getActivity());
+                        book_listView.setAdapter(booksAdapter);
+                    }
+                }.execute();
+
+
             }
-        });*/
-
-
+        });
         book_listView.setAdapter(booksAdapter);
 
+        /************************************ Select book from list action **********************************/
         book_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -80,6 +95,22 @@ public class Books_profil_fragment extends Fragment {
         });
 
         return view;
+    }
+
+    public String constructBooksIsbnRequest(ArrayList<Book> bookList){
+
+        String result = "";
+        Iterator<Book> it = bookList.iterator();
+        while(it.hasNext()){
+
+            if(!result.equals("")){
+                result = result + " | ";
+            }
+            Book book = it.next();
+
+            result = result + "isbn:"+book.getId();
+        }
+        return result;
     }
 
 
