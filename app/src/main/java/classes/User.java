@@ -14,6 +14,7 @@ public class User implements Serializable{
     private String password;
     private ArrayList<Book> booksList;
     private String profilPhotoUri;
+    private String adress  ;
 
     public  User(){
 
@@ -95,6 +96,14 @@ public class User implements Serializable{
 
     public void setProfilPhotoUri(String profilPhotoUri) {
         this.profilPhotoUri = profilPhotoUri;
+    }
+
+    public String getAdress() {
+        return adress;
+    }
+
+    public void setAdress(String adress) {
+        this.adress = adress;
     }
 
     public Map<String, Object> toMap() {

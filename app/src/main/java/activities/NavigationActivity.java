@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 import com.example.bcs.bookexchangev2.R;
@@ -33,6 +34,7 @@ public class NavigationActivity extends AppCompatActivity {
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
+    private Toolbar toolbar;
 
     private android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
 
@@ -40,9 +42,11 @@ public class NavigationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_activity);
+
+
         /******************************************** Toolbar configuration *******************************************/
         //getting the toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
+         toolbar = findViewById(R.id.toolbar);
         //placing toolbar in place of actionbar
         toolbar.inflateMenu(R.menu.search_bar_menu);
         //set navigation icon in the toolbar
@@ -150,16 +154,18 @@ public class NavigationActivity extends AppCompatActivity {
         }
         else if(id_item == R.id.nav_library)
         {
+            toolbar.setTitle("Bibliothèque des livres");
             Library_fragment library_fragment = new Library_fragment();
             fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, library_fragment).commit();
             dl.closeDrawers();
         }else if (id_item == R.id.nav_books){
+            toolbar.setTitle("Mes livres");
             Books_profil_fragment books_fragment = new Books_profil_fragment();
             fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, books_fragment).commit();
             dl.closeDrawers();
 
         }else if (id_item == R.id.nav_event){
-
+            toolbar.setTitle("Evenements à venir");
             Events_fragment events_fragment = new Events_fragment();
             fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, events_fragment).commit();
             dl.closeDrawers();

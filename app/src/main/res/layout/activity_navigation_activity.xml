@@ -66,16 +66,14 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:fillViewport="true"
+                android:background="#f5eff7"
                 >
 
                 <FrameLayout
                     android:id="@+id/dynamic_fragment_frame_layout"
-                    android:layout_gravity="top"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent">
-
-                </FrameLayout>
-
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"></FrameLayout>
             </android.support.v4.widget.NestedScrollView>
 
             <com.nightonke.boommenu.BoomMenuButton
