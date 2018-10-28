@@ -27,12 +27,15 @@ import activities.ProfilActivity;
 import adapters.Book_List_Adapter;
 
 import classes.Book;
+import classes.User;
+import controllers.DataBaseManager;
 
 public class Books_profil_fragment extends Fragment {
 
     private ArrayList<Book> books_list;
     private ListView book_listView;
     private Book_List_Adapter booksAdapter;
+    private DataBaseManager dataBaseManager = new DataBaseManager();
 
 
     @Override
@@ -46,26 +49,15 @@ public class Books_profil_fragment extends Fragment {
         booksAdapter = new Book_List_Adapter(books_list, getActivity());
         book_listView = view.findViewById(R.id.books_list);
 
-        ArrayList<String> authorsBook1 = new ArrayList<>();
-        authorsBook1.add("Auteur 1");
-        authorsBook1.add("Auteur 2");
+        //books_list.add(new Book("id1", "livre 1 ",authorsBook1,  "Français", imageUrl));
+       /* dataBaseManager.getUserIsbnBooksList(new DataBaseManager.ResultGetter<ArrayList<Book>>() {
+            @Override
+            public void onResult(ArrayList<Book> booksList) {
+                Toast.makeText(getActivity(), booksList.get(0).getId(), Toast.LENGTH_LONG).show();
+                books_list.addAll(booksList);
+            }
+        });*/
 
-        ArrayList<String> authorsBook2 = new ArrayList<>();
-        authorsBook2.add("Auteur 3");
-
-        ArrayList<String> authorsBook3 = new ArrayList<>();
-        authorsBook3.add("Auteur 4");
-
-
-        String imageUrl = "http://books.google.com/books/content?id=SpNmAAAAcAAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api";
-        String imageUrl1 = "http://books.google.com/books/content?id=9YItAAAAYAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api";
-        String imageUrl2 = "http://books.google.com/books/content?id=Ui5NDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api";
-        String imageUrl3 = "http://books.google.com/books/content?id=NIy5CwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api";
-
-        books_list.add(new Book("id1", "livre 1 ",authorsBook1,  "Français", imageUrl));
-        books_list.add(new Book("id2", "livre 2 ", authorsBook2, "Anglais", imageUrl1));
-        books_list.add(new Book("id3", "livre 3 ",authorsBook3, "Français", imageUrl2));
-        books_list.add(new Book("id4", "livre 4 ",authorsBook3, "Arabe", imageUrl3));
 
         book_listView.setAdapter(booksAdapter);
 

@@ -2,11 +2,13 @@ package classes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class Book implements Serializable{
 
-    private String id;
+    private String isbn;
     private String title;
     private ArrayList<String> authors;
     private ArrayList<String> categories;
@@ -15,7 +17,7 @@ public class Book implements Serializable{
     private String description;
 
     public Book(String id, String title, ArrayList<String> authors, ArrayList<String> categories, String language, String description, String imageURL) {
-        this.id = id;
+        this.isbn = id;
         this.title = title;
         this.authors = authors;
         this.categories = categories;
@@ -25,7 +27,7 @@ public class Book implements Serializable{
     }
 
     public Book(String id, String title, ArrayList<String> authorsList, String language, String imageURL) {
-        this.id = id;
+        this.isbn = id;
         this.title = title;
         this.language = language;
         this.setAuthors(authorsList);
@@ -33,7 +35,7 @@ public class Book implements Serializable{
     }
 
     public String getId() {
-        return id;
+        return isbn;
     }
 
 
@@ -54,7 +56,7 @@ public class Book implements Serializable{
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.isbn = id;
     }
 
 
@@ -109,6 +111,12 @@ public class Book implements Serializable{
         {
             result = result + iterator.next()+"\n";
         }
+        return result;
+    }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("isbn_13", isbn);
         return result;
     }
 

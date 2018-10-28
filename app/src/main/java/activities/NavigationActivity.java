@@ -15,15 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 
 import com.example.bcs.bookexchangev2.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.nightonke.boommenu.BoomButtons.HamButton;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
 import fragments.Books_fragment;
@@ -73,13 +70,25 @@ public class NavigationActivity extends AppCompatActivity {
         HamButton.Builder builder = new HamButton.Builder()
                 .normalImageRes(R.drawable.ic_add_book)
                 .normalText("Ajouter un nouveau livre")
-                .textSize(18);
+                .textSize(18)
+                .listener(new OnBMClickListener() {
+                    @Override
+                    public void onBoomButtonClick(int index) {
+                       startActivity(new Intent(NavigationActivity.this, Add_Book_Activity.class));
+                    }
+                });
         bmb.addBuilder(builder);
 
         HamButton.Builder builder2 = new HamButton.Builder()
                 .normalImageRes(R.drawable.ic_add_event)
                 .normalText("Créer un evenement")
-                .textSize(20);
+                .textSize(20)
+                .listener(new OnBMClickListener() {
+                    @Override
+                    public void onBoomButtonClick(int index) {
+                        startActivity(new Intent(NavigationActivity.this, Add_Event_Activity.class));
+                    }
+                });
         bmb.addBuilder(builder2);
 
     }

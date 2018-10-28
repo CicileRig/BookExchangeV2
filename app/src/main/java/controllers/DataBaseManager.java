@@ -3,6 +3,7 @@ package controllers;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Base64;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -13,11 +14,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import classes.Book;
 import classes.User;
 
 public class DataBaseManager {
@@ -28,6 +31,7 @@ public class DataBaseManager {
     private DatabaseReference myUsersRef ;
     JsonUtil jsonUtil = new JsonUtil();
     User user ;
+    SecurityManager securityManager = new SecurityManager();
 
     public DataBaseManager(){
         mAuth= FirebaseAuth.getInstance();
@@ -53,6 +57,21 @@ public class DataBaseManager {
         mDatabase.updateChildren(childUpdates);
 
     }
+
+    public void addBookToCurentUser(Book book)
+    {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser userFirebase = mAuth.getCurrentUser();
+        String  userId =  userFirebase.getUid();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        Map<String, Object> postValues = book.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+
+        childUpdates.put("/users/"+userId+"/books/" + securityManager.md5Hash(book.getId()), postValues);
+        mDatabase.updateChildren(childUpdates);
+    }
+
 
     public void getUserById(final ResultGetter<User> getter)
     {
@@ -119,6 +138,38 @@ public class DataBaseManager {
         });
     }
 
+    public void getUserIsbnBooksList(final ResultGetter<ArrayList<Book>> getter)
+    {
+        final ArrayList<Book> bookIsbnList= new ArrayList<>();
+        myUsersRef = database.getReference("users").child(firebaseUser.getUid().toString()).child("books");
+        myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Log.d("dataSnapshot", dataSnapshot.getValue().toString());
+               /* HashMap value = (HashMap)dataSnapshot.getValue();
+                Set cles = value.keySet();
+                Iterator it = cles.iterator();
+
+                while (it.hasNext() ){
+                    String key = (String)it.next();
+                    Map<String, Object> postValues = (Map)value.get(key);
+                        Book book = null;
+                        book.setId(postValues.get("isbn_13").toString());
+                        bookIsbnList.add(book);
+                }
+                getter.onResult(bookIsbnList);*/
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    
     public interface ResultGetter<T> {
         void onResult(T t);
     }

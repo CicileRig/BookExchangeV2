@@ -16,12 +16,12 @@ import java.util.ArrayList;
 
 import classes.Book;
 
-public class BooksAPIManager extends AsyncTask<Void, Void, Book> {
+public class BooksAPIManager extends AsyncTask<Void, Void, ArrayList<Book> > {
 
   //  public AsyncResponse delegate = null;
 
     private String search;
-    static final String API_URL = "https://www.googleapis.com/books/v1/volumes?";
+    static final String API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
 
     public BooksAPIManager(String query) {
@@ -32,11 +32,11 @@ public class BooksAPIManager extends AsyncTask<Void, Void, Book> {
 
     }
 
-    protected Book doInBackground(Void... urls) {
+    protected  ArrayList<Book> doInBackground(Void... urls) {
 
-
+        ArrayList<Book> bookList = new ArrayList<>();
         try {
-            URL url = new URL(API_URL + "q=" + search);
+            URL url = new URL(API_URL  + search);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -46,47 +46,51 @@ public class BooksAPIManager extends AsyncTask<Void, Void, Book> {
                     stringBuilder.append(line).append("\n");
                 }
                 bufferedReader.close();
-
-                String imageURL ;
-                String id ;
-                String title ;
-                String language ;
-                String description ;
-                ArrayList<String> authorsList;
-                ArrayList<String> categorieList;
-                Book book = null;
-
                 try {
                     JSONObject object = (JSONObject) new JSONTokener(stringBuilder.toString()).nextValue();
                     JSONArray items = object.optJSONArray("items");
-                    JSONObject oneItem = items.optJSONObject(0);
-                    JSONObject volumeInfo = oneItem.optJSONObject("volumeInfo");
-                    if (volumeInfo != null){
+                     for(int i=0; i<items.length(); i++){
 
-                        JSONObject imageLinks = volumeInfo.optJSONObject("imageLinks");
-                        imageURL = imageLinks.optString("thumbnail");
+                        JSONObject oneItem = items.optJSONObject(i);
+                        JSONObject volumeInfo = oneItem.optJSONObject("volumeInfo");
+                         String imageURL = null;
+                         String isbn = null;
+                         String title = null;
+                         String language = null ;
+                         String description = null;
+                         ArrayList<String> authorsList = null;
+                         ArrayList<String> categorieList = null;
 
-                        id = oneItem.getString("id");
-                        title = volumeInfo.optString("title");
-                        Log.d("tag", title);
+                        if (volumeInfo != null){
 
-                        language = volumeInfo.optString("language");
-                        Log.d("tag", language);
-                        description = volumeInfo.optString("description");
-                        Log.d("tag", description);
+                            if(volumeInfo.optJSONObject("imageLinks") != null)
+                            {
+                                JSONObject imageLinks = volumeInfo.optJSONObject("imageLinks");
+                                imageURL = imageLinks.optString("thumbnail");
+                            }
 
-                        JSONArray authors = volumeInfo.optJSONArray("authors");
-                        authorsList = getListFromJson(authors);
 
-                        JSONArray categories = volumeInfo.optJSONArray("categories");
-                        categorieList = getListFromJson(categories);
+                            isbn = getISBN13FromVolumeInfo(volumeInfo);
+                            title = volumeInfo.optString("title");
+                            Log.d("tag", title);
 
-                        book = new Book(id, title, authorsList, categorieList, language, description, imageURL);
+                            language = volumeInfo.optString("language");
+                            Log.d("tag", language);
+                            description = volumeInfo.optString("description");
+                            Log.d("tag", description);
+
+                            JSONArray authors = volumeInfo.optJSONArray("authors");
+                            authorsList = getListFromJson(authors);
+
+                            JSONArray categories = volumeInfo.optJSONArray("categories");
+                            categorieList = getListFromJson(categories);
+
+                            bookList.add( new Book(isbn, title, authorsList, categorieList, language, description, imageURL));
+                        }
+
                     }
 
-
-
-                    return book;
+                    return bookList;
                 } catch (JSONException e) {
                     // Appropriate error handling code
                     return null;
@@ -119,6 +123,22 @@ public class BooksAPIManager extends AsyncTask<Void, Void, Book> {
             }
         }
         return list;
+    }
+
+    private String getISBN13FromVolumeInfo(JSONObject volumeInfo) throws JSONException {
+        if (volumeInfo.has("industryIdentifiers")) {
+            JSONArray industryIdentifiers = volumeInfo.getJSONArray("industryIdentifiers");
+
+            for (int i = 0; i < industryIdentifiers.length(); i++) {
+                JSONObject industryIdentifier = industryIdentifiers.getJSONObject(i);
+
+                if (industryIdentifier.has("type") && industryIdentifier.get("type").equals("ISBN_13")) {
+                    return industryIdentifier.getString("identifier");
+                }
+            }
+        }
+
+        return "";
     }
 
 

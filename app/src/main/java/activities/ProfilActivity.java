@@ -26,6 +26,8 @@ import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
 
+import java.util.ArrayList;
+
 import classes.Book;
 import classes.User;
 import controllers.BooksAPIManager;
@@ -140,9 +142,9 @@ public class ProfilActivity extends AppCompatActivity {
 
                 new BooksAPIManager(query){
                     @Override
-                    protected void onPostExecute(Book book) {
-                        super.onPostExecute(book);
-                        userTextView.setText(book.getTitle());
+                    protected void onPostExecute(ArrayList<Book> bookList) {
+                        super.onPostExecute(bookList);
+                        userTextView.setText(bookList.get(0).getTitle());
                     }
                 }.execute();
 

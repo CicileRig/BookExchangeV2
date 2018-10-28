@@ -107,4 +107,5 @@ public class User implements Serializable{
         result.put("profilPhotoUri", profilPhotoUri);
         return result;
     }
+
 }

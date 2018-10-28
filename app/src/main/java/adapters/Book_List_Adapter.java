@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bcs.bookexchangev2.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -94,16 +95,11 @@ public class Book_List_Adapter extends ArrayAdapter<Book>  implements View.OnCli
         viewHolder.bookTitle.setText(book.getTitle());
         viewHolder.bookAuthors.setText(book.authorsToString());
 
-        URL url ;
-        try {
-            url = new URL(book.getImageURL());
-            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            viewHolder.bookImage.setImageBitmap(bmp);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            if(book.getImageURL() != null){
+                Picasso.with(activity)
+                        .load(book.getImageURL())
+                        .into(viewHolder.bookImage);
+            }
 
         // Return the completed view to render on screen
         return convertView;
