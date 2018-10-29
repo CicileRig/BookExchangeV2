@@ -3,7 +3,7 @@
 
     <color name="colorPrimary">#039BE5</color>
     <color name="colorPrimaryDark">#0288d1</color>
-    <color name="colorAccent">#FFA000</color>
+    <color name="colorAccent">#7150b2</color>
 
     <color name="bottom_nav_item_color">#a06abc</color>
     <color name="grey_300">#E0E0E0</color>
@@ -25,5 +25,6 @@
     <color name="my_secondary_text">#ffffff</color>
     <color name="my_icons">#FFFFFF</color>
     <color name="my_divider">#B6B6B6</color>
+    <color name="color_gris">#eae5f3</color>
 
 </resources>

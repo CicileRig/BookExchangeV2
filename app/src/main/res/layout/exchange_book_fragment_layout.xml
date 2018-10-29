@@ -7,54 +7,60 @@
     android:background="#f3f2fc">
 
 
+    <TextView
+        android:id="@+id/book_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/cardview_light_background"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
+        android:minLines="1"
+        android:paddingTop="5dp"
+        android:singleLine="false"
+        android:text="Titre"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@color/cardview_light_background"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/book_image"
             android:layout_width="141dp"
             android:layout_height="192dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:layout_gravity="center_vertical"
             android:focusable="false"
             android:focusableInTouchMode="false" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="5dp"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/book_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:minLines="1"
-                android:paddingTop="10dp"
-                android:singleLine="false"
-                android:text="Titre"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18dp"
-                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/book_authors"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:minLines="1"
+                android:paddingRight="16dp"
                 android:singleLine="false"
                 android:text="Auteurs"
                 android:textSize="18dp" />
@@ -64,6 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
+                android:paddingRight="16dp"
                 android:text="Catégories"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/book_authors"
@@ -74,6 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minLines="1"
+                android:paddingRight="16dp"
                 android:singleLine="false"
                 android:text="Langue"
                 android:textSize="18dp" />
@@ -85,6 +93,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/cardview_light_background"
         android:orientation="vertical">
 
         <TextView
@@ -93,17 +103,18 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
+            android:minLines="1"
             android:paddingLeft="16dp"
+            android:singleLine="false"
             android:text="Description"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:minLines="1"
-            android:singleLine="false" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/book_description"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="16dp"
             android:minLines="1"
             android:paddingLeft="16dp"
@@ -112,11 +123,26 @@
             android:text="TextView"
             android:textSize="18sp" />
 
+        <Button
+            android:id="@+id/readMoreButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_toRightOf="@+id/book_description"
+            android:background="@color/cardview_shadow_end_color"
+            android:gravity="right"
+            android:text="...Lire la suite "
+            android:textAllCaps="false"
+            android:textColor="@color/bottom_nav_item_color" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey_300"
         android:orientation="vertical"
         android:paddingBottom="24dp"
         android:paddingLeft="16dp"
@@ -128,7 +154,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="Livre proposé par :"
+            android:text="Offres proposées par : "
             android:textColor="@android:color/holo_purple"
             android:textSize="18sp"
             android:textStyle="bold" />

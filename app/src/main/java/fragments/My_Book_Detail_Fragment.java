@@ -32,6 +32,7 @@ public class My_Book_Detail_Fragment extends Fragment {
     private TextView book_description;
     private TextView book_language;
     private ImageView book_image ;
+    private Button readMoreButton;
 
     private ImageManager imageManager = new ImageManager();
     private Button deleteBookBtn ;
@@ -63,10 +64,31 @@ public class My_Book_Detail_Fragment extends Fragment {
         book_description= view.findViewById(R.id.book_description);
         if(book.getDescription() != null)
         {
+
             book_description.setText(book.getDescription());
+            book_description.setMaxLines(2);
+
         }else{
             book_description.setText("Aucune description");
         }
+        final Boolean[] interup = {false};
+        readMoreButton = view.findViewById(R.id.readMoreButton);
+        readMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(interup[0] == false )
+                {
+                    book_description.setMaxLines(100);
+                    interup[0] = true;
+                    readMoreButton.setText("Lire moins");
+                }else{
+                    book_description.setMaxLines(2);
+                    interup[0] = false;
+                    readMoreButton.setText("...Lire la suite");
+                }
+            }
+        });
+
 
         book_language = view.findViewById(R.id.book_language);
         if(book.getLanguage() != null){
