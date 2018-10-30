@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class User implements Serializable{
 
+    private String id;
     private String name;
     private String surname;
     private String mailAdress;
@@ -106,6 +107,14 @@ public class User implements Serializable{
         this.adress = adress;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", name);
@@ -114,6 +123,7 @@ public class User implements Serializable{
         result.put("password", password);
         result.put("age", age);
         result.put("profilPhotoUri", profilPhotoUri);
+        result.put("adress", adress);
         return result;
     }
 

@@ -44,7 +44,7 @@ public class Library_fragment extends Fragment {
         library_books_list = new ArrayList<>();
         booksAdapter = new Book_List_Adapter(library_books_list, getActivity());
 
-        dataBaseManager.getUsersList(new DataBaseManager.ResultGetter<ArrayList<String>>() {
+        dataBaseManager.getUsersIsbnList(new DataBaseManager.ResultGetter<ArrayList<String>>() {
             @Override
             public void onResult(ArrayList<String> usersList) {
 

@@ -66,7 +66,7 @@ public class Contact_User_Fragment extends Fragment {
 
 
         /***************************** Initialisations ******************************************************/
-        user.setMailAdress("sylia.righi@hotmail.com");
+        user.setMailAdress(user.getMailAdress());
         final String  bookTitle = getArguments().getString("book");
         textTo.setText(user.getMailAdress());
         textSubject.setText("BookExchange@Demander le livre "+bookTitle);
@@ -76,9 +76,8 @@ public class Contact_User_Fragment extends Fragment {
         contact_by_callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "je suis ici", Toast.LENGTH_SHORT).show();
                 Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:0377778888"));
+                callIntent.setData(Uri.parse("tel:0659065528"));
                 startActivity(callIntent);
             }
         });

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -65,7 +66,8 @@ public class ProfilActivity extends AppCompatActivity {
         userTextView = findViewById(R.id.username);
         userProfilPhoto = findViewById(R.id.overlapImage);
 
-        dataBaseManager.getUserById(new DataBaseManager.ResultGetter<User>() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        dataBaseManager.getUserById( userId, new DataBaseManager.ResultGetter<User>() {
             @Override
             public void onResult(User user) {
                 userTextView.setText(user.getName().toString()+" "+user.getSurname().toString());

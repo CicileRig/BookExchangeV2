@@ -74,36 +74,8 @@ public class DataBaseManager {
     }
 
 
-    public void getUserById(final ResultGetter<User> getter)
-    {
 
-        myUsersRef.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(User.class);
-                if(user.getName() != null)
-                    user.setName( user.getName().toString());
-                if(user.getSurname() != null)
-                    user.setSurname(user.getSurname().toString());
-                if(user.getAge() != null)
-                    user.setAge(user.getAge().toString());
-                if(user.getProfilPhotoUri() != null)
-                    user.setProfilPhotoUri(user.getProfilPhotoUri().toString());
-                user.setMailAdress(user.getMailAdress().toString());
-                user.setPassword(user.getPassword().toString());
-                getter.onResult(user);
-
-                }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    public void getUsersList(final ResultGetter<ArrayList<String>> getter)
+    public void getUsersIsbnList(final ResultGetter<ArrayList<String>> getter)
     {
 
         final ArrayList<String> usersIdList = new ArrayList<>();
@@ -120,6 +92,67 @@ public class DataBaseManager {
                 }
                 getter.onResult(usersIdList);
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getUsersList(final String bookId, final ResultGetter<ArrayList<User>> getter)
+    {
+
+        final ArrayList<User> usersIdList = new ArrayList<>();
+        myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap value = (HashMap)dataSnapshot.getValue();
+                Set cles = value.keySet();
+                Iterator it = cles.iterator();
+
+                while (it.hasNext() ){
+                    String key = (String)it.next();
+                    final User user = new User();
+                    user.setId(key);
+                    Map<String, Object> postValues = (Map)value.get(key);
+                    user.setName(postValues.get("name").toString());
+                    user.setSurname(postValues.get("surname").toString());
+                    user.setAdress(postValues.get("adress").toString());
+                    user.setMailAdress(postValues.get("mailAdress").toString());
+                    if(postValues.get("profilPhotoUri") != null)
+                        user.setProfilPhotoUri(postValues.get("profilPhotoUri").toString());
+
+                                checkIfUserHaveBook(bookId, user, new DataBaseManager.ResultGetter<Boolean>(){
+                                    @Override
+                                    public void onResult(Boolean trouv) {
+                                        if( trouv == true){
+                                            Log.d("user", user.getId());
+                                            usersIdList.add(user);
+                                            getter.onResult(usersIdList);
+                                        }
+                                    }
+                                });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getUserById(String userId, final ResultGetter<User> getter)
+    {
+
+        myUsersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(User.class);
+                getter.onResult(user);
             }
 
             @Override
@@ -162,14 +195,95 @@ public class DataBaseManager {
         });
     }
 
+    public void getAllBooks( final ResultGetter<ArrayList<Book>> getter)
+    {
+        myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap value = (HashMap)dataSnapshot.getValue();
+                Set cles = value.keySet();
+                Iterator it = cles.iterator();
+                final ArrayList<Book>[] resultBooksList =(ArrayList<Book>[])new ArrayList[1];
+                resultBooksList[0] = new ArrayList<>();
+                while (it.hasNext() ){
+
+                    getUserIsbnBooksList((String)it.next(), new DataBaseManager.ResultGetter<ArrayList<Book>>() {
+                                @Override
+                                public void onResult(ArrayList<Book> booksList) {
+                                    resultBooksList[0] = addListToAnother(resultBooksList[0], booksList);
+                                }
+                    });
+                }
+                getter.onResult(resultBooksList[0]);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getUsersHavingBook(String isbn,final ResultGetter<ArrayList<Book>> getter ){
+
+    }
+
 
     public void deleteBookFromUser(Book book) {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("users").child(firebaseUser.getUid().toString()).child("books").child(securityManager.md5Hash(book.getId())).removeValue();
     }
-    
+
+    public void checkIfUserHaveBook(final String isbnBook, final User user, final ResultGetter<Boolean> getter){
+
+        myUsersRef = database.getReference("users").child(user.getId()).child("books");
+        myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot != null){
+                    HashMap value = (HashMap)dataSnapshot.getValue();
+                    if (value != null){
+                        Set cles = value.keySet();
+                        Iterator it = cles.iterator();
+                        Boolean trouv = false;
+                        while (it.hasNext() & !trouv){
+                            String key = (String)it.next();
+                            Map<String, Object> postValues = (Map)value.get(key);
+                            if(isbnBook.equals(postValues.get("isbn_13").toString())){
+                                Log.d("comparaison : ", isbnBook+" "+postValues.get("isbn_13").toString());
+                                trouv = true ;
+                            }
+                        }
+                        getter.onResult(trouv);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
     public interface ResultGetter<T> {
         void onResult(T t);
+    }
+
+    public ArrayList<Book> addListToAnother(ArrayList<Book> globalList, ArrayList<Book> listToAdd)
+    {
+        ArrayList<Book> result = globalList;
+        Iterator<Book> it = listToAdd.iterator();
+        while (it.hasNext()) {
+
+            Book book = it.next();
+            if (!result.contains(book)) {
+                result.add(book);
+            }
+        }
+        return result;
     }
 }

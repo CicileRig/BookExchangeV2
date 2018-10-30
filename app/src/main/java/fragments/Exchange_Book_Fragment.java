@@ -3,11 +3,10 @@ package fragments;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
 
@@ -24,12 +22,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import activities.NavigationActivity;
 import adapters.User_List_Adapter;
 import classes.Book;
 import classes.User;
 import controllers.DataBaseManager;
-import controllers.ImageManager;
 
 public class Exchange_Book_Fragment extends Fragment {
 
@@ -41,7 +37,6 @@ public class Exchange_Book_Fragment extends Fragment {
     private ImageView book_image ;
     private ListView usersListview ;
     private Button readMoreButton;
-    private ArrayList<User> usersList;
 
     private DataBaseManager dataBaseManager = new DataBaseManager();
 
@@ -118,18 +113,25 @@ public class Exchange_Book_Fragment extends Fragment {
         }
 
         /******************************* Populate Offers listview **********************************************/
-        usersListview = view.findViewById(R.id.usersListview);
-        usersList = new ArrayList<User>();
-        dataBaseManager.getUserById(new DataBaseManager.ResultGetter<User>() {
+
+        usersListview = view.findViewById(R.id.offersListView);
+        usersListview.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
             @Override
-            public void onResult(User user) {
-                user.setAdress("16 Avenue des Frères Lumière, Bry-sur-Marne, Paris");
-                usersList.add(user);
-                User_List_Adapter adapter = new User_List_Adapter(usersList,getActivity());
-                usersListview.setAdapter(adapter);
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
 
+        dataBaseManager.getUsersList(book.getId(), new DataBaseManager.ResultGetter<ArrayList<User>>() {
+            @Override
+            public void onResult(ArrayList<User> users) {
+                User_List_Adapter usersAdapter = new User_List_Adapter(users, getActivity());
+                usersListview.setAdapter(usersAdapter);
+            }
+        });
         /************************************ Select offer from list action **********************************/
         usersListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
