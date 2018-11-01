@@ -35,6 +35,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText surnameEditText;
     private EditText adressEditText;
     private EditText passwrdEditText;
+    private EditText postalAdressEditText;
 
     private FirebaseAuth mAuth;
     private DataBaseManager dataBaseManager = new DataBaseManager();
@@ -51,56 +52,7 @@ public class RegistrationActivity extends AppCompatActivity {
         surnameEditText = findViewById(R.id.surnameEditText);
         adressEditText = findViewById(R.id.adressEditText);
         passwrdEditText = findViewById(R.id.passwordEditText);
-
-        // focus change des views :
-        nameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus & nameEditText.getText().toString().equals("Nom")) {
-                    nameEditText.setText("");
-                }
-                if (!hasFocus & nameEditText.getText().toString().equals("")){
-                    nameEditText.setText("Nom");
-                }
-            }
-        });
-
-        surnameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus & surnameEditText.getText().toString().equals("Prénom")) {
-                    surnameEditText.setText("");
-                }
-                if (!hasFocus & surnameEditText.getText().toString().equals("")){
-                    surnameEditText.setText("Prénom");
-                }
-            }
-        });
-
-        adressEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus & adressEditText.getText().toString().equals("Adresse mail")) {
-                    adressEditText.setText("");
-                }
-                if (!hasFocus & adressEditText.getText().toString().equals("")){
-                    adressEditText.setText("Adresse mail");
-                }
-            }
-        });
-
-        passwrdEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus & passwrdEditText.getText().toString().equals("Mot de passe")) {
-                    passwrdEditText.setText("");
-                }
-                if (!hasFocus & passwrdEditText.getText().toString().equals("")){
-                    passwrdEditText.setText("Mot de passe");
-                }
-            }
-        });
-
+        postalAdressEditText = findViewById(R.id.adressPostale);
 
         /*******************************Validation de l'inscription ********************************/
         registerBtn = findViewById(R.id.nextButton);
@@ -110,6 +62,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 Intent intent = new Intent(RegistrationActivity.this, RegistrationActivity2.class);
                 User myUser = new User(nameEditText.getText().toString(), surnameEditText.getText().toString()
                         , adressEditText.getText().toString(),passwrdEditText.getText().toString());
+                myUser.setAdress(postalAdressEditText.getText().toString());
                 intent.putExtra("user", myUser);
                 startActivity(intent);
                // createAccount(adressEditText.getText().toString(), passwrdEditText.getText().toString());

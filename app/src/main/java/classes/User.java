@@ -16,6 +16,7 @@ public class User implements Serializable{
     private ArrayList<Book> booksList;
     private String profilPhotoUri;
     private String adress  ;
+    private String phoneNumber;
 
     public  User(){
 
@@ -115,6 +116,14 @@ public class User implements Serializable{
         this.id = id;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", name);
@@ -124,6 +133,7 @@ public class User implements Serializable{
         result.put("age", age);
         result.put("profilPhotoUri", profilPhotoUri);
         result.put("adress", adress);
+        result.put("phoneNumber", phoneNumber);
         return result;
     }
 

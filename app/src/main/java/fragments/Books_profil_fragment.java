@@ -59,12 +59,17 @@ public class Books_profil_fragment extends Fragment {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
         dataBaseManager.getUserIsbnBooksList(userId, new DataBaseManager.ResultGetter<ArrayList<Book>>() {
             @Override
-            public void onResult(ArrayList<Book> booksList) {
-
+            public void onResult(final ArrayList<Book> booksList) {
                 new BooksAPIManager(constructBooksIsbnRequest(booksList)){
                     @Override
                     protected void onPostExecute(ArrayList<Book> bookList) {
                         super.onPostExecute(bookList);
+
+                        Iterator<Book> it1  = booksList.iterator();
+                        Iterator<Book> it2 = bookList.iterator();
+                        while(it2.hasNext()){
+                            it2.next().setSoumissionDate(it1.next().getSoumissionDate());
+                        }
                         Book_List_Adapter booksAdapter = new Book_List_Adapter(bookList, getActivity());
                         book_listView.setAdapter(booksAdapter);
                     }

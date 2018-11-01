@@ -15,6 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.Set;
 
 import activities.MainActivity;
 import classes.Book;
+import classes.Event;
 import classes.User;
 
 public class DataBaseManager {
@@ -30,6 +32,7 @@ public class DataBaseManager {
     private FirebaseUser firebaseUser ;
     private FirebaseDatabase database ;
     private DatabaseReference myUsersRef ;
+    private DatabaseReference myEventsRef ;
     JsonUtil jsonUtil = new JsonUtil();
     User user ;
     SecurityManager securityManager = new SecurityManager();
@@ -39,6 +42,7 @@ public class DataBaseManager {
         firebaseUser = mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         myUsersRef = database.getReference("users");
+        myEventsRef = database.getReference("events");
     }
 
     public void writeNewUser(User user) {
@@ -66,6 +70,11 @@ public class DataBaseManager {
         String  userId =  userFirebase.getUid();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        book.setSoumissionDate(year+"-"+month+"-"+day);
         Map<String, Object> postValues = book.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
 
@@ -73,6 +82,53 @@ public class DataBaseManager {
         mDatabase.updateChildren(childUpdates);
     }
 
+    public void addNewEvent(Event event)
+    {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser userFirebase = mAuth.getCurrentUser();
+        String  userId =  userFirebase.getUid();
+        event.setCreatorId(userId);
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        Map<String, Object> postValues = event.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+
+        childUpdates.put("/events/" + securityManager.md5Hash(event.getEvent_name()), postValues);
+        mDatabase.updateChildren(childUpdates);
+    }
+
+    public void getEventList(final ResultGetter<ArrayList<Event>> getter)
+    {
+        final ArrayList<Event> eventList = new ArrayList<>();
+        myEventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap value = (HashMap)dataSnapshot.getValue();
+                Set cles = value.keySet();
+                Iterator it = cles.iterator();
+
+                while (it.hasNext() ){
+                    String key = (String)it.next();
+                    final Event event = new Event();
+                    Map<String, Object> postValues = (Map)value.get(key);
+                    event.setEvent_name(postValues.get("name").toString());
+                    event.setEvent_date(postValues.get("date").toString());
+                    event.setEvent_hour(postValues.get("hour").toString());
+                    event.setEvent_place(postValues.get("place").toString());
+                    event.setEvent_description(postValues.get("description").toString());
+                    event.setCreatorId(postValues.get("creatorId").toString());
+                    if(postValues.get("imageUrl") != null)
+                        event.setEvent_image_url(postValues.get("imageUrl").toString());
+                    eventList.add(event);
+                }
+                getter.onResult(eventList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
     public void getUsersIsbnList(final ResultGetter<ArrayList<String>> getter)
@@ -101,7 +157,7 @@ public class DataBaseManager {
         });
     }
 
-    public void getUsersList(final String bookId, final ResultGetter<ArrayList<User>> getter)
+    public void getUsersHavingBook(final String bookId, final ResultGetter<ArrayList<User>> getter)
     {
 
         final ArrayList<User> usersIdList = new ArrayList<>();
@@ -173,7 +229,6 @@ public class DataBaseManager {
                 if(dataSnapshot != null){
                     HashMap value = (HashMap)dataSnapshot.getValue();
                     if (value != null){
-
                         Set cles = value.keySet();
                         Iterator it = cles.iterator();
                         while (it.hasNext() ){
@@ -181,6 +236,7 @@ public class DataBaseManager {
                             Map<String, Object> postValues = (Map)value.get(key);
                             Book book = new Book();
                             book.setId(postValues.get("isbn_13").toString());
+                            book.setSoumissionDate(postValues.get("soumission_date").toString());
                             bookIsbnList.add(book);
                         }
                         getter.onResult(bookIsbnList);
@@ -223,11 +279,6 @@ public class DataBaseManager {
             }
         });
     }
-
-    public void getUsersHavingBook(String isbn,final ResultGetter<ArrayList<Book>> getter ){
-
-    }
-
 
     public void deleteBookFromUser(Book book) {
 

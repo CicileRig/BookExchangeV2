@@ -125,7 +125,7 @@ public class Exchange_Book_Fragment extends Fragment {
             }
         });
 
-        dataBaseManager.getUsersList(book.getId(), new DataBaseManager.ResultGetter<ArrayList<User>>() {
+        dataBaseManager.getUsersHavingBook(book.getId(), new DataBaseManager.ResultGetter<ArrayList<User>>() {
             @Override
             public void onResult(ArrayList<User> users) {
                 User_List_Adapter usersAdapter = new User_List_Adapter(users, getActivity());

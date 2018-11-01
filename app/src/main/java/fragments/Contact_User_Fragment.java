@@ -77,7 +77,7 @@ public class Contact_User_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:0659065528"));
+                callIntent.setData(Uri.parse("tel:"+user.getPhoneNumber()));
                 startActivity(callIntent);
             }
         });

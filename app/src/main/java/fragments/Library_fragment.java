@@ -15,6 +15,7 @@ import com.example.bcs.bookexchangev2.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class Library_fragment extends Fragment {
                 {
                     dataBaseManager.getUserIsbnBooksList(it.next(), new DataBaseManager.ResultGetter<ArrayList<Book>>() {
                         @Override
-                        public void onResult(ArrayList<Book> booksList) {
+                        public void onResult(final ArrayList<Book> booksList) {
 
                             new BooksAPIManager(constructBooksIsbnRequest(booksList)){
                                 @Override
@@ -61,8 +62,17 @@ public class Library_fragment extends Fragment {
                                     super.onPostExecute(bookList);
                                     if(bookList != null)
                                     {
-                                       library_books_list =  addListToAnother(library_books_list,bookList);
-                                       libraryListview.setAdapter(booksAdapter);
+                                        Iterator<Book> it1  = booksList.iterator();
+                                        Iterator<Book> it2 = bookList.iterator();
+                                        while(it2.hasNext()){
+                                            it2.next().setSoumissionDate(it1.next().getSoumissionDate());
+                                        }
+                                        library_books_list =  addListToAnother(library_books_list,bookList);
+                                        HashSet<Book> hashSet = new HashSet<Book>();
+                                        hashSet.addAll(library_books_list);
+                                        library_books_list.clear();
+                                        library_books_list.addAll(hashSet);
+                                        libraryListview.setAdapter(booksAdapter);
                                     }
                                 }
                             }.execute();
@@ -126,6 +136,15 @@ public class Library_fragment extends Fragment {
             }
         }
         return result;
+    }
+
+    public ArrayList<Book> deleteRedondance(ArrayList<Book> booksList){
+
+        HashSet<Book> hashSet = new HashSet<Book>();
+        hashSet.addAll(booksList);
+        booksList.clear();
+        booksList.addAll(hashSet);
+        return booksList;
     }
 
 }

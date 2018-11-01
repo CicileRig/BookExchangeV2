@@ -24,9 +24,17 @@ import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import adapters.Book_List_Adapter;
+import classes.Book;
+import controllers.BooksAPIManager;
+import controllers.DataBaseManager;
 import fragments.Books_fragment;
 import fragments.Books_profil_fragment;
 import fragments.Events_fragment;
+import fragments.Events_profil_Fragment;
 import fragments.Library_fragment;
 
 public class NavigationActivity extends AppCompatActivity {
@@ -37,6 +45,9 @@ public class NavigationActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
     private android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
+    private DataBaseManager dataBaseManager= new DataBaseManager();
+    private ArrayList<Book> library_books_list;
+    private Book_List_Adapter booksAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +136,8 @@ public class NavigationActivity extends AppCompatActivity {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setIconifiedByDefault(true);
+        library_books_list = new ArrayList<>();
+        booksAdapter = new Book_List_Adapter(library_books_list, NavigationActivity.this);
 
         //here we will get the search query
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -167,7 +180,7 @@ public class NavigationActivity extends AppCompatActivity {
 
         }else if (id_item == R.id.nav_event){
             toolbar.setTitle("Evenements à venir");
-            Events_fragment events_fragment = new Events_fragment();
+            Events_profil_Fragment events_fragment = new Events_profil_Fragment();
             fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, events_fragment).commit();
             dl.closeDrawers();
         }else if (id_item == R.id.nav_log_out){
@@ -194,6 +207,36 @@ public class NavigationActivity extends AppCompatActivity {
         });
 
     }
+
+            public String constructBooksIsbnRequest(ArrayList<Book> bookList){
+
+                String result = "";
+                Iterator<Book> it = bookList.iterator();
+                while(it.hasNext()){
+
+                    if(!result.equals("")){
+                        result = result + " | ";
+                    }
+                    Book book = it.next();
+
+                    result = result + "isbn:"+book.getId();
+                }
+                return result;
+            }
+
+            public ArrayList<Book> addListToAnother(ArrayList<Book> globalList, ArrayList<Book> listToAdd)
+            {
+                ArrayList<Book> result = globalList;
+                Iterator<Book> it = listToAdd.iterator();
+                while (it.hasNext()) {
+
+                    Book book = it.next();
+                    if (!result.contains(book)) {
+                        result.add(book);
+                    }
+                }
+                return result;
+            }
 
 
 

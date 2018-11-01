@@ -10,15 +10,21 @@ import android.widget.ListView;
 import com.example.bcs.bookexchangev2.R;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import adapters.Book_List_Adapter;
 import adapters.Event_List_Adapter;
+import classes.Book;
 import classes.Event;
+import controllers.BooksAPIManager;
+import controllers.DataBaseManager;
 
 public class Events_profil_Fragment extends Fragment {
 
     private ArrayList<Event> events_list;
     private ListView event_listView;
     private Event_List_Adapter EventAdapter;
+    private DataBaseManager dataBaseManager = new DataBaseManager();
 
 
     @Override
@@ -36,9 +42,13 @@ public class Events_profil_Fragment extends Fragment {
         EventAdapter = new Event_List_Adapter(events_list, getActivity());
         event_listView = view.findViewById(R.id.events_list);
 
-        events_list.add(new Event("Salon du livre", " 24 mars 2019", "De 10h à 18h30"));
-        events_list.add(new Event("Fête du livre", " 13 avril 2019", "De 9h à 18h"));
-        events_list.add(new Event("Livres SWAP", " 8 aout 2019", "De 14h à 19h"));
+        dataBaseManager.getEventList(new DataBaseManager.ResultGetter<ArrayList<Event>>() {
+            @Override
+            public void onResult(final ArrayList<Event> eventList) {
+                Event_List_Adapter booksAdapter = new Event_List_Adapter(eventList, getActivity());
+                event_listView.setAdapter(booksAdapter);
+            }
+        });
 
         event_listView.setAdapter(EventAdapter);
 

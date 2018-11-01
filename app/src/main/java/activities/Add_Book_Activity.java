@@ -95,7 +95,6 @@ public class Add_Book_Activity extends AppCompatActivity {
                         }
                     }.execute();
 
-
                     // one of the radio buttons is checked
                 return false;
             }
@@ -116,7 +115,6 @@ public class Add_Book_Activity extends AppCompatActivity {
                 Book book = (Book) adapterView.getItemAtPosition(i);
                 dataBaseManager.addBookToCurentUser(book);
                 Toast.makeText(Add_Book_Activity.this, "Livre Ajouté avec succes", Toast.LENGTH_LONG).show();
-
                 Intent intent = new Intent(Add_Book_Activity.this, NavigationActivity.class);
                 intent.putExtra("item_id",R.id.nav_books);
                 startActivity(intent);

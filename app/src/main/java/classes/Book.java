@@ -15,6 +15,7 @@ public class Book implements Serializable{
     private String language;
     private String imageURL;
     private String description;
+    private String soumissionDate ;
 
     public Book(String id, String title, ArrayList<String> authors, ArrayList<String> categories, String language, String description, String imageURL) {
         this.isbn = id;
@@ -96,6 +97,22 @@ public class Book implements Serializable{
         this.description = description;
     }
 
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public String getSoumissionDate() {
+        return soumissionDate;
+    }
+
+    public void setSoumissionDate(String soumissionDate) {
+        this.soumissionDate = soumissionDate;
+    }
+
     public String authorsToString()
     {
         String result = "Par : ";
@@ -121,6 +138,7 @@ public class Book implements Serializable{
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("isbn_13", isbn);
+        result.put("soumission_date", soumissionDate);
         return result;
     }
 
@@ -138,5 +156,13 @@ public class Book implements Serializable{
             return false;
         }
     }
+
+    @Override
+    public int hashCode() {
+
+        return isbn.hashCode();
+    }
+
+
 
 }

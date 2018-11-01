@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class Book_List_Adapter extends ArrayAdapter<Book>  implements View.OnCli
     private static class ViewHolder {
         TextView bookTitle;
         TextView bookAuthors;
+        TextView bookSoumissionDate;
         ImageView bookImage ;
     }
 
@@ -78,6 +80,7 @@ public class Book_List_Adapter extends ArrayAdapter<Book>  implements View.OnCli
             convertView = inflater.inflate(R.layout.row_book_item, parent, false);
             viewHolder.bookTitle =  convertView.findViewById(R.id.book_name);
             viewHolder.bookAuthors =  convertView.findViewById(R.id.book_authors);
+            viewHolder.bookSoumissionDate =  convertView.findViewById(R.id.dateSoumissionTextview);
             viewHolder.bookImage =  convertView.findViewById(R.id.book_image);
 
             result=convertView;
@@ -94,6 +97,7 @@ public class Book_List_Adapter extends ArrayAdapter<Book>  implements View.OnCli
 
         viewHolder.bookTitle.setText(book.getTitle());
         viewHolder.bookAuthors.setText(book.authorsToString());
+        viewHolder.bookSoumissionDate.setText("Publié le: "+book.getSoumissionDate());
 
             if(book.getImageURL() != null){
                 Picasso.with(activity)

@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,6 +60,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
     private Button createAccountBtn = null;
     private Button addProfilImageBtn = null;
     private ImageView profilPhoto = null;
+    private EditText phonenumberEdittext;
 
 
     @Override
@@ -70,6 +72,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
         createAccountBtn = findViewById(R.id.registerBtn);
         burthDateEditText = findViewById(R.id.burthDateEditText);
         profilPhoto = findViewById(R.id.profile_image);
+        phonenumberEdittext = findViewById(R.id.numeroTel);
 
 
         /********************************        Boite de dialog datepicker           **********************************/
@@ -101,6 +104,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
         /******************************* bouton création du compte ******************************************************/
         final User user  = (User) this.getIntent().getSerializableExtra("user");
+        user.setPhoneNumber(phonenumberEdittext.getText().toString());
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
