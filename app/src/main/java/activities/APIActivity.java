@@ -36,7 +36,6 @@ public class APIActivity extends AppCompatActivity {
     EditText emailText;
     TextView responseView;
     ProgressBar progressBar;
-    static final String API_KEY = "AIzaSyBRjMz0FuVPgQGtZbeFHmzYsL62E7MH80k";
     static final String API_URL = "https://www.googleapis.com/books/v1/volumes?";
 
     @Override
