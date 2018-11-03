@@ -176,6 +176,7 @@ public class Add_Event_Activity extends AppCompatActivity {
 
                     Bitmap photo = (Bitmap) imageReturnedIntent.getExtras().get("data");
                     imageView.setImageBitmap(photo);
+                    addImageBtn.setText("");
                 }
 
                 break;
@@ -185,6 +186,7 @@ public class Add_Event_Activity extends AppCompatActivity {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                         imageView.setImageBitmap(bitmap);
+                        addImageBtn.setText("");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

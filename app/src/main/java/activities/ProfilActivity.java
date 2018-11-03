@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import classes.User;
 import controllers.BooksAPIManager;
 import controllers.DataBaseManager;
 import controllers.ImageManager;
+import controllers.MyBounceInterpolator;
 import fragments.Books_profil_fragment;
 import fragments.Events_profil_Fragment;
 
@@ -42,6 +45,8 @@ import fragments.Events_profil_Fragment;
 public class ProfilActivity extends AppCompatActivity {
 
     private TextView userTextView = null;
+    private TextView booksNumber = null;
+    private TextView eventsNumber = null;
     private ImageView userProfilPhoto = null;
     private BottomNavigationView bottomNavigationView;
     private static DrawerLayout dl;
@@ -56,22 +61,46 @@ public class ProfilActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
+
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        /*************************************** Display name surname of user ****************************************/
 
+        // view :
         userTextView = findViewById(R.id.username);
         userProfilPhoto = findViewById(R.id.overlapImage);
+        booksNumber = findViewById(R.id.myBooksNumber);
+        eventsNumber = findViewById(R.id.myEventsNumber);
 
+        /*************************************** Display user informations ****************************************/
+
+        // get current user isntance
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // getting the name and surname of the current user
         dataBaseManager.getUserById( userId, new DataBaseManager.ResultGetter<User>() {
             @Override
             public void onResult(User user) {
                 userTextView.setText(user.getName().toString()+" "+user.getSurname().toString());
                 userProfilPhoto.setImageBitmap(imageManager.decodeBase64(user.getProfilPhotoUri()));
+            }
+        });
+
+        // getting the number of books of the current user
+        dataBaseManager.getCUserBookNumber(new DataBaseManager.ResultGetter<String>() {
+            @Override
+            public void onResult(String bookNbr) {
+                booksNumber.setText(bookNbr);
+            }
+        });
+
+        // getting the number of events created by the user
+        dataBaseManager.getCUserEventsNumber(new DataBaseManager.ResultGetter<String>() {
+            @Override
+            public void onResult(String eventNbr) {
+                eventsNumber.setText(eventNbr);
             }
         });
 
@@ -83,9 +112,13 @@ public class ProfilActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         //set navigation icon in the toolbar
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
 
         /******************************************** Navigation drawer menu *******************************************/
 
+        // getting the navigatio drawer view
         dl = findViewById(R.id.drawer_layout);
         t = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
         dl.addDrawerListener(t);
@@ -138,15 +171,10 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-              /* BooksAPIManager booksAPIManager = new BooksAPIManager(query);
-                booksAPIManager.delegate = ProfilActivity.this;
-                booksAPIManager.execute();*/
-
                 new BooksAPIManager(query){
                     @Override
                     protected void onPostExecute(ArrayList<Book> bookList) {
                         super.onPostExecute(bookList);
-                        userTextView.setText(bookList.get(0).getTitle());
                     }
                 }.execute();
 

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import classes.User;
 import controllers.DataBaseManager;
+import controllers.MyBounceInterpolator;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -53,12 +56,19 @@ public class RegistrationActivity extends AppCompatActivity {
         adressEditText = findViewById(R.id.adressEditText);
         passwrdEditText = findViewById(R.id.passwordEditText);
         postalAdressEditText = findViewById(R.id.adressPostale);
+        registerBtn = findViewById(R.id.nextButton);
+
+        // annimate button :
+        final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+        // Use bounce interpolator with amplitude 0.2 and frequency 20
+        myAnim.setInterpolator(interpolator);
 
         /*******************************Validation de l'inscription ********************************/
-        registerBtn = findViewById(R.id.nextButton);
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                registerBtn.startAnimation(myAnim);
                 Intent intent = new Intent(RegistrationActivity.this, RegistrationActivity2.class);
                 User myUser = new User(nameEditText.getText().toString(), surnameEditText.getText().toString()
                         , adressEditText.getText().toString(),passwrdEditText.getText().toString());

@@ -1,6 +1,5 @@
 package fragments;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
 
@@ -98,7 +96,7 @@ public class My_Book_Detail_Fragment extends Fragment {
             book_language.setVisibility(View.GONE);
         }
 
-        book_image= view.findViewById(R.id.book_image);
+        book_image= view.findViewById(R.id.event_image_r);
         if(book.getImageURL() != null)
         {
             try {

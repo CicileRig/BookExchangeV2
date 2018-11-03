@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -44,6 +46,7 @@ import java.util.Calendar;
 import classes.User;
 import controllers.DataBaseManager;
 import controllers.ImageManager;
+import controllers.MyBounceInterpolator;
 
 public class RegistrationActivity2 extends AppCompatActivity {
 
@@ -103,11 +106,18 @@ public class RegistrationActivity2 extends AppCompatActivity {
         });
 
         /******************************* bouton création du compte ******************************************************/
+        // annimations button :
+        final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+        // Use bounce interpolator with amplitude 0.2 and frequency 20
+        myAnim.setInterpolator(interpolator);
+
         final User user  = (User) this.getIntent().getSerializableExtra("user");
         user.setPhoneNumber(phonenumberEdittext.getText().toString());
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                createAccountBtn.startAnimation(myAnim);
                 createAccount(user);
             }
         });

@@ -2,10 +2,7 @@ package adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +15,6 @@ import android.widget.TextView;
 import com.example.bcs.bookexchangev2.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import classes.Book;
@@ -81,7 +75,7 @@ public class Book_List_Adapter extends ArrayAdapter<Book>  implements View.OnCli
             viewHolder.bookTitle =  convertView.findViewById(R.id.book_name);
             viewHolder.bookAuthors =  convertView.findViewById(R.id.book_authors);
             viewHolder.bookSoumissionDate =  convertView.findViewById(R.id.dateSoumissionTextview);
-            viewHolder.bookImage =  convertView.findViewById(R.id.book_image);
+            viewHolder.bookImage =  convertView.findViewById(R.id.event_image_r);
 
             result=convertView;
 

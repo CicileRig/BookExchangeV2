@@ -1,5 +1,6 @@
 package adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -8,9 +9,11 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bcs.bookexchangev2.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -19,19 +22,20 @@ import classes.Event;
 public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnClickListener{
 
     private ArrayList<Event> dataSet;
-    Context mContext;
+    Activity activity;
 
     // View lookup cache
     private static class ViewHolder {
         TextView eventName;
         TextView eventDate;
         TextView eventHour;
+        ImageView eventImage;
     }
 
-    public Event_List_Adapter(ArrayList<Event> data, Context context) {
-        super(context, R.layout.row_event_item, data);
+    public Event_List_Adapter(ArrayList<Event> data, Activity activity) {
+        super(activity, R.layout.row_event_item, data);
         this.dataSet = data;
-        this.mContext=context;
+        this.activity=activity;
 
     }
 
@@ -70,6 +74,7 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
             viewHolder.eventName =  convertView.findViewById(R.id.book_name);
             viewHolder.eventDate =  convertView.findViewById(R.id.event_date);
             viewHolder.eventHour =  convertView.findViewById(R.id.event_hour);
+            viewHolder.eventImage =  convertView.findViewById(R.id.event_image_r);
 
             result=convertView;
 
@@ -79,13 +84,19 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
             result=convertView;
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+        Animation animation = AnimationUtils.loadAnimation(activity, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);
         lastPosition = position;
 
         viewHolder.eventName.setText(event.getEvent_name());
         viewHolder.eventDate.setText(event.getEvent_date());
         viewHolder.eventHour.setText(event.getEvent_hour());
+
+        if(event.getEvent_image_url() != null){
+            Picasso.with(activity)
+                    .load(event.getEvent_image_url())
+                    .into(viewHolder.eventImage);
+        }
 
         // Return the completed view to render on screen
         return convertView;

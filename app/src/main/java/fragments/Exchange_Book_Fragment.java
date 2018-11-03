@@ -98,7 +98,7 @@ public class Exchange_Book_Fragment extends Fragment {
             book_language.setVisibility(View.GONE);
         }
 
-        book_image= view.findViewById(R.id.book_image);
+        book_image= view.findViewById(R.id.event_image_r);
         if(book.getImageURL() != null)
         {
             try {

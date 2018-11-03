@@ -39,7 +39,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.6"
-                app:layout_constraintStart_toEndOf="@id/book_image"
+                app:layout_constraintStart_toEndOf="@id/event_image_r"
                 app:layout_constraintTop_toBottomOf="@id/event_hour" />
 
             <TextView
@@ -50,12 +50,12 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Salon du livre"
-                app:layout_constraintStart_toEndOf="@id/book_image"
-                app:layout_constraintTop_toTopOf="@id/book_image" />
+                app:layout_constraintStart_toEndOf="@id/event_image_r"
+                app:layout_constraintTop_toTopOf="@id/event_image_r" />
 
             <ImageView
 
-                android:id="@+id/book_image"
+                android:id="@+id/event_image_r"
                 android:layout_width="141dp"
                 android:layout_height="192dp"
                 android:layout_marginBottom="8dp"

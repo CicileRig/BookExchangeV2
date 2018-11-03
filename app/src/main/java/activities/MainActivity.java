@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,7 +20,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import classes.User;
+import controllers.MyBounceInterpolator;
+
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener{
@@ -27,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private EditText mEmailField = null;
     private EditText mPasswordField = null;
+    private Animation myAnim = null;
+    private Button btnLogIn;
 
     private FirebaseAuth mAuth;
     @Override
@@ -39,33 +45,16 @@ public class MainActivity extends AppCompatActivity implements
         // Views
         mEmailField = findViewById(R.id.fieldEmail);
         mPasswordField = findViewById(R.id.fieldPassword);
+        btnLogIn = findViewById(R.id.emailSignInButton);
         findViewById(R.id.emailSignInButton).setOnClickListener(this);
         findViewById(R.id.emailCreateAccountButton).setOnClickListener(this);
 
-
-        mEmailField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus & mEmailField.getText().toString().equals(exString)) {
-                    mEmailField.setText("");
-                }
-                if (!hasFocus & mEmailField.getText().toString().equals("")){
-                    mEmailField.setText(R.string.ex_rayan_ak_hotmail_fr);
-                }
-            }
-        });
-
-        mPasswordField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus & mPasswordField.getText().toString().equals(psswdString)) {
-                    mPasswordField.setText("");
-                }
-                if (!hasFocus & mPasswordField.getText().toString().equals("")){
-                    mPasswordField.setText(R.string.pssword);
-                }
-            }
-        });
+        //add annimation to buttons
+        myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+        // Use bounce interpolator with amplitude 0.2 and frequency 20
+        myAnim.setInterpolator(interpolator);
+        btnLogIn.startAnimation(myAnim);
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -147,13 +136,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         int i = v.getId();
+
         if (i == R.id.emailCreateAccountButton) {
             Intent t = new Intent(this, RegistrationActivity.class);
             startActivity(t);
         } else if (i == R.id.emailSignInButton) {
+            Button btn = findViewById(i);
+            btn.startAnimation(myAnim);
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+
         }
     }
-
 }
 

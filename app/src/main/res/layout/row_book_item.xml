@@ -23,7 +23,7 @@
 
 
             <ImageView
-                android:id="@+id/book_image"
+                android:id="@+id/event_image_r"
                 android:layout_width="141dp"
                 android:layout_height="192dp"
                 android:layout_centerVertical="true"

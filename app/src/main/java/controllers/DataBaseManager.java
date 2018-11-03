@@ -96,6 +96,64 @@ public class DataBaseManager {
         mDatabase.updateChildren(childUpdates);
     }
 
+    // le nombre de livres de l'utilisateur actuel
+    public void getCUserBookNumber(final ResultGetter<String> getter){
+
+        myUsersRef = database.getReference("users").child(firebaseUser.getUid()).child("books");
+        myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot != null){
+                    HashMap value = (HashMap)dataSnapshot.getValue();
+                    if (value != null){
+                        Set cles = value.keySet();
+                        getter.onResult(Integer.toString(cles.size()));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    // le nombre d'evenements créés par l'utilisateur actuel
+    public void getCUserEventsNumber(final ResultGetter<String> getter){
+
+        myEventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot != null){
+                    HashMap value = (HashMap)dataSnapshot.getValue();
+                    if (value != null){
+                        Set cles = value.keySet();
+                        Iterator it = cles.iterator();
+                        int cpt = 0;
+                        while (it.hasNext() ){
+                            String key = (String)it.next();
+                            final Event event = new Event();
+                            Map<String, Object> postValues = (Map)value.get(key);
+                           if(postValues.get("creatorId").equals(firebaseUser.getUid())){
+                               cpt ++;
+                           }
+                        }
+                        getter.onResult(Integer.toString(cpt));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
     public void getEventList(final ResultGetter<ArrayList<Event>> getter)
     {
         final ArrayList<Event> eventList = new ArrayList<>();
@@ -103,24 +161,27 @@ public class DataBaseManager {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 HashMap value = (HashMap)dataSnapshot.getValue();
-                Set cles = value.keySet();
-                Iterator it = cles.iterator();
+                if(value != null){
+                    Set cles = value.keySet();
+                    Iterator it = cles.iterator();
 
-                while (it.hasNext() ){
-                    String key = (String)it.next();
-                    final Event event = new Event();
-                    Map<String, Object> postValues = (Map)value.get(key);
-                    event.setEvent_name(postValues.get("name").toString());
-                    event.setEvent_date(postValues.get("date").toString());
-                    event.setEvent_hour(postValues.get("hour").toString());
-                    event.setEvent_place(postValues.get("place").toString());
-                    event.setEvent_description(postValues.get("description").toString());
-                    event.setCreatorId(postValues.get("creatorId").toString());
-                    if(postValues.get("imageUrl") != null)
-                        event.setEvent_image_url(postValues.get("imageUrl").toString());
-                    eventList.add(event);
+                    while (it.hasNext() ){
+                        String key = (String)it.next();
+                        final Event event = new Event();
+                        Map<String, Object> postValues = (Map)value.get(key);
+                        event.setEvent_name(postValues.get("name").toString());
+                        event.setEvent_date(postValues.get("date").toString());
+                        event.setEvent_hour(postValues.get("hour").toString());
+                        event.setEvent_place(postValues.get("place").toString());
+                        event.setEvent_description(postValues.get("description").toString());
+                        event.setCreatorId(postValues.get("creatorId").toString());
+                        if(postValues.get("imageUrl") != null)
+                            event.setEvent_image_url(postValues.get("imageUrl").toString());
+                        eventList.add(event);
+                    }
+                    getter.onResult(eventList);
                 }
-                getter.onResult(eventList);
+
             }
 
             @Override
