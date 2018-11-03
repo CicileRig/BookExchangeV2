@@ -8,50 +8,20 @@
     <android.support.v7.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="55dp"
-            tools:layout_editor_absoluteY="162dp">
-
-
-            <Button
-                android:id="@+id/go_to-event_button"
-                android:layout_width="117dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/button_style"
-                android:text="J y vais"
-                android:textAllCaps="false"
-                android:textColor="@color/cardview_light_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.6"
-                app:layout_constraintStart_toEndOf="@id/event_image_r"
-                app:layout_constraintTop_toBottomOf="@id/event_hour" />
-
-            <TextView
-                android:id="@+id/book_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Salon du livre"
-                app:layout_constraintStart_toEndOf="@id/event_image_r"
-                app:layout_constraintTop_toTopOf="@id/event_image_r" />
+            android:orientation="horizontal">
 
             <ImageView
 
@@ -62,30 +32,63 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/salon_du_livre" />
 
-            <TextView
-                android:id="@+id/event_date"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Dimanche 24 mars 2019"
-                app:layout_constraintStart_toStartOf="@+id/book_name"
-                app:layout_constraintTop_toBottomOf="@+id/book_name" />
+                android:layout_gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/event_hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Horaires : de 10h à 18h30 "
-                app:layout_constraintStart_toStartOf="@+id/event_date"
-                app:layout_constraintTop_toBottomOf="@+id/event_date" />
-        </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/book_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:minLines="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:singleLine="false"
+                    android:text="Salon du livre"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/event_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:minLines="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:singleLine="false"
+                    android:text="Dimanche 24 mars 2019" />
+
+                <TextView
+                    android:id="@+id/event_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:minLines="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:singleLine="false"
+                    android:text="Horaires : de 10h à 18h30 " />
+
+                <TextView
+                    android:id="@+id/event_place"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:minLines="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:singleLine="false"
+                    android:text="place" />
+            </LinearLayout>
+
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>

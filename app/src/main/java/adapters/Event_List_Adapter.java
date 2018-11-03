@@ -18,17 +18,19 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import classes.Event;
+import controllers.ImageManager;
 
 public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnClickListener{
 
     private ArrayList<Event> dataSet;
     Activity activity;
-
+    Context mContext;
     // View lookup cache
     private static class ViewHolder {
         TextView eventName;
         TextView eventDate;
         TextView eventHour;
+        TextView eventPlace;
         ImageView eventImage;
     }
 
@@ -36,6 +38,7 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
         super(activity, R.layout.row_event_item, data);
         this.dataSet = data;
         this.activity=activity;
+        this.mContext=activity;
 
     }
 
@@ -75,6 +78,7 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
             viewHolder.eventDate =  convertView.findViewById(R.id.event_date);
             viewHolder.eventHour =  convertView.findViewById(R.id.event_hour);
             viewHolder.eventImage =  convertView.findViewById(R.id.event_image_r);
+            viewHolder.eventPlace = convertView.findViewById(R.id.event_place);
 
             result=convertView;
 
@@ -84,18 +88,18 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
             result=convertView;
         }
 
-        Animation animation = AnimationUtils.loadAnimation(activity, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);
         lastPosition = position;
 
         viewHolder.eventName.setText(event.getEvent_name());
         viewHolder.eventDate.setText(event.getEvent_date());
-        viewHolder.eventHour.setText(event.getEvent_hour());
+        viewHolder.eventHour.setText("A : " +event.getEvent_hour());
+        viewHolder.eventPlace.setText(event.getEvent_place());
 
         if(event.getEvent_image_url() != null){
-            Picasso.with(activity)
-                    .load(event.getEvent_image_url())
-                    .into(viewHolder.eventImage);
+            ImageManager imageManager = new ImageManager();
+            viewHolder.eventImage.setImageBitmap(imageManager.decodeBase64(event.getEvent_image_url()));
         }
 
         // Return the completed view to render on screen
