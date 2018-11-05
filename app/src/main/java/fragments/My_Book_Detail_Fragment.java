@@ -1,5 +1,6 @@
 package fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -17,11 +18,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import activities.NavigationActivity;
 import classes.Book;
 import controllers.DataBaseManager;
 import controllers.ImageManager;
 
-public class My_Book_Detail_Fragment extends Fragment {
+public class My_Book_Detail_Fragment extends BaseFragment {
 
     private TextView book_title ;
     private TextView book_authors ;
@@ -120,6 +122,21 @@ public class My_Book_Detail_Fragment extends Fragment {
             }
         });
         return view;
+    }
+
+
+    /**
+     * Back pressed send from activity.
+     *
+     * @return if event is consumed, it will return true.
+     */
+    @Override
+    public boolean onBackPressed() {
+
+        Intent intent = new Intent(getActivity(), NavigationActivity.class);
+        intent.putExtra("item_id",R.id.nav_books);
+        startActivity(intent);
+        return true;
     }
 
 }

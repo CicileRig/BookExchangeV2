@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 
 import com.example.bcs.bookexchangev2.R;
@@ -26,14 +25,13 @@ import com.nightonke.boommenu.BoomMenuButton;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import adapters.Book_List_Adapter;
 import classes.Book;
-import controllers.BooksAPIManager;
 import controllers.DataBaseManager;
-import fragments.Books_fragment;
+import fragments.BaseFragment;
 import fragments.Books_profil_fragment;
-import fragments.Events_fragment;
 import fragments.Events_profil_Fragment;
 import fragments.Library_fragment;
 
@@ -107,15 +105,32 @@ public class NavigationActivity extends AppCompatActivity {
                 });
         bmb.addBuilder(builder2);
 
-
     }
 
     @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed()
     {
-        super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
+        dl.closeDrawers();
+        // super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
+        List fragmentList = getSupportFragmentManager().getFragments();
+
+        boolean handled = false;
+        for(Object f : fragmentList) {
+            if(f instanceof BaseFragment) {
+                handled = ((BaseFragment)f).onBackPressed();
+
+                if(handled) {
+                    break;
+                }
+            }
+        }
+
+        if(!handled) {
+            super.onBackPressed();
+        }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

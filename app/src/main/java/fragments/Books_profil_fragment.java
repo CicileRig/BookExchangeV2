@@ -86,7 +86,6 @@ public class Books_profil_fragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // Get the selected item text from ListView
                 Book value = (Book) adapterView.getItemAtPosition(i);
-                Log.d("Listview", value.getTitle());
                 My_Book_Detail_Fragment my_book_detail_fragment = new My_Book_Detail_Fragment();
 
                 Bundle args = new Bundle();

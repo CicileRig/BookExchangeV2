@@ -1,5 +1,7 @@
 package fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -22,12 +24,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import activities.Add_Book_Activity;
+import activities.NavigationActivity;
 import adapters.User_List_Adapter;
 import classes.Book;
 import classes.User;
 import controllers.DataBaseManager;
 
-public class Exchange_Book_Fragment extends Fragment {
+public class Exchange_Book_Fragment extends BaseFragment {
 
     private TextView book_title ;
     private TextView book_authors ;
@@ -156,4 +160,19 @@ public class Exchange_Book_Fragment extends Fragment {
         return view;
     }
 
+    /**
+     * Back pressed send from activity.
+     *
+     * @return if event is consumed, it will return true.
+     */
+    @Override
+    public boolean onBackPressed() {
+
+        Intent intent = new Intent(getActivity(), NavigationActivity.class);
+        intent.putExtra("item_id",R.id.nav_library);
+        startActivity(intent);
+        return true;
+    }
+
 }
+

@@ -1,10 +1,11 @@
 package classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Event {
+public class Event implements Serializable {
 
     private String event_id;
     private String event_name;

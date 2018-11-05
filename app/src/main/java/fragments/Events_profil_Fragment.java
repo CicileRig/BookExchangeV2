@@ -2,9 +2,12 @@ package fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.bcs.bookexchangev2.R;
@@ -51,6 +54,24 @@ public class Events_profil_Fragment extends Fragment {
         });
 
         event_listView.setAdapter(EventAdapter);
+
+        /************************************ Select event from list action **********************************/
+        event_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // Get the selected item text from ListView
+                Event value = (Event) adapterView.getItemAtPosition(i);
+                Event_Detail_Fragment event_detail_fragment = new Event_Detail_Fragment();
+
+                Bundle args = new Bundle();
+                args.putSerializable("event", value);
+                event_detail_fragment.setArguments(args);
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.dynamic_fragment_frame_layout, event_detail_fragment);
+                transaction.commit();
+            }
+        });
 
         return view;
     }

@@ -21,10 +21,11 @@ import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
 
+import activities.NavigationActivity;
 import classes.User;
 import controllers.ImageManager;
 
-public class Contact_User_Fragment extends Fragment {
+public class Contact_User_Fragment extends BaseFragment {
 
     private Button buttonSend;
     private EditText textTo;
@@ -116,6 +117,20 @@ public class Contact_User_Fragment extends Fragment {
         });
 
         return view;
+    }
+
+    /**
+     * Back pressed send from activity.
+     *
+     * @return if event is consumed, it will return true.
+     */
+    @Override
+    public boolean onBackPressed() {
+
+        Intent intent = new Intent(getActivity(), NavigationActivity.class);
+        intent.putExtra("item_id",R.id.nav_library);
+        startActivity(intent);
+        return true;
     }
 
 }

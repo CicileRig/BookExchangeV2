@@ -199,7 +199,10 @@ public class Add_Event_Activity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
+       // super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
+        Intent intent = new Intent(Add_Event_Activity.this, NavigationActivity.class);
+        intent.putExtra("item_id",R.id.nav_event);
+        startActivity(intent);
     }
 
 
