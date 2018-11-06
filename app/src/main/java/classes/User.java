@@ -137,4 +137,13 @@ public class User implements Serializable{
         return result;
     }
 
+    public Map<String, Object> toMapSimple() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("name", name);
+        result.put("surname", surname);
+        result.put("profilPhotoUri", profilPhotoUri);
+        return result;
+    }
+
+
 }

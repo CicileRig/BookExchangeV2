@@ -1,5 +1,6 @@
 package activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +21,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import controllers.MyBounceInterpolator;
+import fragments.BaseFragment;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -68,6 +72,14 @@ public class MainActivity extends AppCompatActivity implements
         updateUI(currentUser);
     }
     // [END on_start_check_user]
+
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onBackPressed()
+    {
+
+    }
 
 
 

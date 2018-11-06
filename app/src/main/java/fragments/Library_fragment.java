@@ -115,7 +115,7 @@ public class Library_fragment extends Fragment {
         while(it.hasNext()){
 
             if(!result.equals("")){
-                result = result + " | ";
+                result = result + "%20|%20";
             }
             Book book = it.next();
 

@@ -84,10 +84,7 @@ public class DataBaseManager {
 
     public void addNewEvent(Event event)
     {
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser userFirebase = mAuth.getCurrentUser();
-        String  userId =  userFirebase.getUid();
-        event.setCreatorId(userId);
+        event.setCreatorId(firebaseUser.getUid());
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         Map<String, Object> postValues = event.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
@@ -96,6 +93,35 @@ public class DataBaseManager {
         mDatabase.updateChildren(childUpdates);
     }
 
+    // ajouter un participant à un evenement
+    public void addParticipantToEvent(Event event, User participant)
+    {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        Map<String, Object> postValues = participant.toMapSimple();
+        Map<String, Object> childUpdates = new HashMap<>();
+
+        childUpdates.put("/events/"+securityManager.md5Hash(event.getEvent_name())+"/participants/" + participant.getId(), postValues);
+        mDatabase.updateChildren(childUpdates);
+    }
+
+    // récuperer l'identifiant du créateur d'un event par son titre
+    public void getEventCreatorId(Event event, final ResultGetter<String> getter){
+
+        myEventsRef.child(securityManager.md5Hash(event.getEvent_name())).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Event event = dataSnapshot.getValue(Event.class);
+                getter.onResult(event.getCreatorId());
+                // TODO : faire marcher
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return;
+    }
     // le nombre de livres de l'utilisateur actuel
     public void getCUserBookNumber(final ResultGetter<String> getter){
 
