@@ -47,9 +47,6 @@ public class NavigationActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
     private android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
-    private DataBaseManager dataBaseManager= new DataBaseManager();
-    private ArrayList<Book> library_books_list;
-    private Book_List_Adapter booksAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +56,16 @@ public class NavigationActivity extends AppCompatActivity {
 
         /******************************************** Toolbar configuration *******************************************/
         //getting the toolbar
-         toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         //placing toolbar in place of actionbar
         toolbar.inflateMenu(R.menu.search_bar_menu);
+        setSupportActionBar(toolbar);
         //set navigation icon in the toolbar
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
+
 
         /******************************************** Navigation drawer menu *******************************************/
 
@@ -155,21 +157,28 @@ public class NavigationActivity extends AppCompatActivity {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setIconifiedByDefault(true);
-        library_books_list = new ArrayList<>();
-        booksAdapter = new Book_List_Adapter(library_books_list, NavigationActivity.this);
 
         //here we will get the search query
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String query) {
-
-                Log.d("LOG", "Je suis dans l'execution de la requete ");
+                Log.d("LOG", "ici");
+                Search_Fragment search_fragment = new Search_Fragment();
+                Bundle args = new Bundle();
+                args.putString("query", query);
+                search_fragment.setArguments(args);
+                fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, search_fragment).commit();
 
                 return false;
             }
 
+
             @Override
             public boolean onQueryTextChange(String newText) {
+                if(newText.equals("")){
+                    Library_fragment library_fragment = new Library_fragment();
+                    fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, library_fragment).commit();
+                }
                 return false;
             }
         });

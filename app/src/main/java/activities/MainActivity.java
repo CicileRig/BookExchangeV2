@@ -2,6 +2,7 @@ package activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -61,6 +62,16 @@ public class MainActivity extends AppCompatActivity implements
         btnLogIn.startAnimation(myAnim);
 
         mAuth = FirebaseAuth.getInstance();
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SESSION", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+
+        if(pref ==null)// getting String
+        {
+
+        }else{
+            signIn(pref.getString("USER_SESSION",  null), pref.getString("PASSWORD_SESSION",  null));
+        }
     }
 
     // [START on_start_check_user]
@@ -155,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements
         } else if (i == R.id.emailSignInButton) {
             Button btn = findViewById(i);
             btn.startAnimation(myAnim);
+
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
 
         }

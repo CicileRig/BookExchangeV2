@@ -327,7 +327,6 @@ public class DataBaseManager {
                                     @Override
                                     public void onResult(Boolean trouv) {
                                         if( trouv == true){
-                                            Log.d("user", user.getId());
                                             usersIdList.add(user);
                                             getter.onResult(usersIdList);
                                         }
@@ -372,7 +371,7 @@ public class DataBaseManager {
                 boolean trouv = false;
                 if(dataSnapshot != null) {
                     HashMap value = (HashMap) dataSnapshot.getValue();
-                    Log.d("LOG",dataSnapshot.toString());
+                    Log.d("LOG_BY_TITLE",dataSnapshot.toString());
                     if (value != null) {
                         Set cles = value.keySet();
                         Iterator it = cles.iterator();
@@ -595,7 +594,6 @@ public class DataBaseManager {
                             String key = (String)it.next();
                             Map<String, Object> postValues = (Map)value.get(key);
                             if(isbnBook.equals(postValues.get("isbn_13").toString())){
-                                Log.d("comparaison : ", isbnBook+" "+postValues.get("isbn_13").toString());
                                 trouv = true ;
                             }
                         }

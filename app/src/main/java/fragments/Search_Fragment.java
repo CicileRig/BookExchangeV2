@@ -50,6 +50,7 @@ public class Search_Fragment extends BaseFragment {
         final DataBaseManager dataBaseManager = new DataBaseManager();
         // chercher par titre
 
+
         dataBaseManager.findBookByTitle(getArguments().getString("query"), new DataBaseManager.ResultGetter<ArrayList<Book>>() {
             @Override
             public void onResult(ArrayList<Book> books) {
@@ -58,10 +59,16 @@ public class Search_Fragment extends BaseFragment {
                     if (getActivity()!=null){
                         Book_List_Adapter booksAdapter = new Book_List_Adapter(books, getActivity());
                         finded_books_lv.setAdapter(booksAdapter);
+                        if(booksAdapter.getCount() == 0){
+                            textView.setText("Le livre que vous cherchez n'existe pas");
+                        }else{
+                            textView.setText("");
+                        }
                     }else{
                         Log.d("Log", "getActivity est nul");
                     }
 
+                    Log.d("Log", "found by title");
                 }else{
                     dataBaseManager.findBookByAuthor(getArguments().getString("query"), new DataBaseManager.ResultGetter<ArrayList<Book>>() {
                         @Override
@@ -71,17 +78,46 @@ public class Search_Fragment extends BaseFragment {
                                 if (getActivity()!=null){
                                     Book_List_Adapter booksAdapter = new Book_List_Adapter(books2, getActivity());
                                     finded_books_lv.setAdapter(booksAdapter);
+                                    if(booksAdapter.getCount() == 0){
+                                        textView.setText("Le livre que vous cherchez n'existe pas");
+                                    }else{
+                                        textView.setText("");
+                                    }
                                 }else{
                                     Log.d("Log", "getActivity est nul");
                                 }
+
                             }else{
-                                textView.setText("Le livre que vous cherchez n'existe pas");
+                                Log.d("Log", " not found");
+
                             }
                         }
                     });
                 }
             }
         });
+
+
+        /************************************ Select book from list action **********************************/
+        finded_books_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // Get the selected item text from ListView
+                Book value = (Book) adapterView.getItemAtPosition(i);
+                Log.d("Listview", value.getTitle());
+
+                Exchange_Book_Fragment my_book_detail_fragment = new Exchange_Book_Fragment();
+
+                Bundle args = new Bundle();
+                args.putSerializable("book", value);
+                my_book_detail_fragment.setArguments(args);
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.dynamic_fragment_frame_layout, my_book_detail_fragment);
+                transaction.commit();
+            }
+        });
+
 
         return view;
     }

@@ -265,7 +265,7 @@ public class Add_Event_Activity extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int month, int day){
 
             TextView textview = getActivity().findViewById(R.id.event_date);
-            textview.setText(day + "  " + getMonthName(month) + "  " + year);
+            textview.setText(day + " " + getMonthName(month) + " " + year);
         }
     }
 }
