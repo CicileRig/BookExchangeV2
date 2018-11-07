@@ -22,10 +22,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.List;
-
+import classes.User;
+import controllers.DataBaseManager;
 import controllers.MyBounceInterpolator;
-import fragments.BaseFragment;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -38,14 +37,16 @@ public class MainActivity extends AppCompatActivity implements
     private EditText mPasswordField = null;
     private Animation myAnim = null;
     private Button btnLogIn;
+    final String IS_USER_LOGIN = "IsUserLoggedIn";
+
+    int PRIVATE_MODE = 0;
+    private DataBaseManager dataBaseManager = new DataBaseManager();
 
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String exString = getResources().getString(R.string.ex_rayan_ak_hotmail_fr);
-        final String psswdString = getResources().getString(R.string.pssword);
 
         // Views
         mEmailField = findViewById(R.id.fieldEmail);
@@ -63,16 +64,17 @@ public class MainActivity extends AppCompatActivity implements
 
         mAuth = FirebaseAuth.getInstance();
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("SESSION", 0); // 0 - for private mode
-        SharedPreferences.Editor editor = pref.edit();
-
-        if(pref ==null)// getting String
-        {
-
-        }else{
-            signIn(pref.getString("USER_SESSION",  null), pref.getString("PASSWORD_SESSION",  null));
+        // Check User Session Manager
+        SharedPreferences prefs = getSharedPreferences("SESSION", MODE_PRIVATE);
+        String restoredText = prefs.getString("name", null);
+        if (restoredText != null) {
+            Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
+            startActivity(intent);
         }
+
+
     }
+
 
     // [START on_start_check_user]
     @Override
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    public void signIn(String email, String password) {
+    public void signIn(final String email, final String password) {
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
             return;
@@ -110,6 +112,32 @@ public class MainActivity extends AppCompatActivity implements
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+
+                            dataBaseManager.getUserById(user.getUid(), new DataBaseManager.ResultGetter<User>() {
+                                @Override
+                                public void onResult(User user) {
+
+                                    SharedPreferences.Editor editor = getSharedPreferences("SESSION", MODE_PRIVATE).edit();
+
+                                    // Storing login value as TRUE
+                                    editor.putBoolean(IS_USER_LOGIN, true);
+
+                                    // Storing name in pref
+                                    editor.putString("name", user.getName());
+
+                                    // Storing surname in pref
+                                    editor.putString("surname", user.getSurname());
+
+                                    // Storing image url in pref
+                                    editor.putString("image_url", user.getProfilPhotoUri());
+
+                                    // commit changes
+                                    editor.apply();
+
+
+                                }
+                            });
+
                             Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
                             startActivity(intent);
                         } else {
@@ -166,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements
         } else if (i == R.id.emailSignInButton) {
             Button btn = findViewById(i);
             btn.startAnimation(myAnim);
-
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
 
         }

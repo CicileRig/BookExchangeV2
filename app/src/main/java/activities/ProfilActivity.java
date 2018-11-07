@@ -1,23 +1,17 @@
 package activities;
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,7 +24,6 @@ import controllers.DataBaseManager;
 import controllers.ImageManager;
 import fragments.Books_profil_fragment;
 import fragments.Events_profil_Fragment;
-import fragments.Search_Fragment;
 
 
 public class ProfilActivity extends AppCompatActivity {
@@ -67,17 +60,9 @@ public class ProfilActivity extends AppCompatActivity {
 
         /*************************************** Display user informations ****************************************/
 
-        // get current user isntance
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // getting the name and surname of the current user
-        dataBaseManager.getUserById( userId, new DataBaseManager.ResultGetter<User>() {
-            @Override
-            public void onResult(User user) {
-                userTextView.setText(user.getName().toString()+" "+user.getSurname().toString());
-                userProfilPhoto.setImageBitmap(imageManager.decodeBase64(user.getProfilPhotoUri()));
-            }
-        });
+        SharedPreferences prefs = getSharedPreferences("SESSION", MODE_PRIVATE);
+        userTextView.setText(prefs.getString("name", null)+" "+prefs.getString("surname", null));
+        userProfilPhoto.setImageBitmap(imageManager.decodeBase64(prefs.getString("image_url", null)));
 
         // getting the number of books of the current user
         dataBaseManager.getCUserBookNumber(new DataBaseManager.ResultGetter<String>() {

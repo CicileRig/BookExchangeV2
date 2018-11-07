@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,14 +25,8 @@ import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import adapters.Book_List_Adapter;
-import classes.Book;
-import controllers.DataBaseManager;
 import fragments.BaseFragment;
 import fragments.Books_profil_fragment;
 import fragments.Events_profil_Fragment;
@@ -45,6 +39,18 @@ public class NavigationActivity extends AppCompatActivity {
     private ActionBarDrawerToggle t;
     private NavigationView nv;
     private Toolbar toolbar;
+
+    final String PREFER_NAME = "SessionRef";
+
+    // Shared Preferences reference
+    SharedPreferences pref;
+
+    // Editor reference for Shared preferences
+    SharedPreferences.Editor editor;
+
+    // Shared pref mode
+    int PRIVATE_MODE = 0;
+
 
     private android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
 
@@ -215,6 +221,13 @@ public class NavigationActivity extends AppCompatActivity {
         }else if (id_item == R.id.nav_log_out){
             dl.closeDrawers();
             FirebaseAuth.getInstance().signOut();
+            // Clear the User session data
+            // and redirect user to LoginActivity
+            SharedPreferences preferences =getSharedPreferences("SESSION",MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+
             Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
             startActivity(intent);
         }
@@ -236,37 +249,6 @@ public class NavigationActivity extends AppCompatActivity {
         });
 
     }
-
-            public String constructBooksIsbnRequest(ArrayList<Book> bookList){
-
-                String result = "";
-                Iterator<Book> it = bookList.iterator();
-                while(it.hasNext()){
-
-                    if(!result.equals("")){
-                        result = result + " | ";
-                    }
-                    Book book = it.next();
-
-                    result = result + "isbn:"+book.getId();
-                }
-                return result;
-            }
-
-            public ArrayList<Book> addListToAnother(ArrayList<Book> globalList, ArrayList<Book> listToAdd)
-            {
-                ArrayList<Book> result = globalList;
-                Iterator<Book> it = listToAdd.iterator();
-                while (it.hasNext()) {
-
-                    Book book = it.next();
-                    if (!result.contains(book)) {
-                        result.add(book);
-                    }
-                }
-                return result;
-            }
-
 
 
 }
