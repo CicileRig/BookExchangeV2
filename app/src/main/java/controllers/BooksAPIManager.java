@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import classes.Book;
 
@@ -90,7 +91,7 @@ public class BooksAPIManager extends AsyncTask<Void, Void, ArrayList<Book> > {
                             JSONArray categories = volumeInfo.optJSONArray("categories");
                             categorieList = getListFromJson(categories);
 
-                            bookList.add( new Book(isbn, title, authorsList, categorieList, language, description, imageURL));
+                            bookList.add( new Book(isbn, title, arrayListToString(authorsList), arrayListToString(categorieList), language, description, imageURL));
                         }
 
                     }
@@ -160,6 +161,18 @@ public class BooksAPIManager extends AsyncTask<Void, Void, ArrayList<Book> > {
         }
 
         return "";
+    }
+
+
+    public String arrayListToString(ArrayList<String> list)
+    {
+        String result = "";
+        Iterator<String> iterator = list.iterator();
+        while (iterator.hasNext())
+        {
+            result = result + iterator.next()+" ";
+        }
+        return result;
     }
 
 

@@ -10,14 +10,14 @@ public class Book implements Serializable{
 
     private String isbn;
     private String title;
-    private ArrayList<String> authors;
-    private ArrayList<String> categories;
+    private String authors;
+    private String categories;
     private String language;
     private String imageURL;
     private String description;
     private String soumissionDate ;
 
-    public Book(String id, String title, ArrayList<String> authors, ArrayList<String> categories, String language, String description, String imageURL) {
+    public Book(String id, String title, String authors, String categories, String language, String description, String imageURL) {
         this.isbn = id;
         this.title = title;
         this.authors = authors;
@@ -27,7 +27,7 @@ public class Book implements Serializable{
         this.imageURL = imageURL;
     }
 
-    public Book(String id, String title, ArrayList<String> authorsList, String language, String imageURL) {
+    public Book(String id, String title, String authorsList, String language, String imageURL) {
         this.isbn = id;
         this.title = title;
         this.language = language;
@@ -48,11 +48,11 @@ public class Book implements Serializable{
         return title;
     }
 
-    public ArrayList<String> getAuthors() {
+    public String getAuthors() {
         return authors;
     }
 
-    public ArrayList<String> getCategories() {
+    public String getCategories() {
         return categories;
     }
 
@@ -69,11 +69,11 @@ public class Book implements Serializable{
         this.title = title;
     }
 
-    public void setAuthors(ArrayList<String> authors) {
+    public void setAuthors(String authors) {
         this.authors = authors;
     }
 
-    public void setCategories(ArrayList<String> categories) {
+    public void setCategories(String categories) {
         this.categories = categories;
     }
 
@@ -113,30 +113,24 @@ public class Book implements Serializable{
         this.soumissionDate = soumissionDate;
     }
 
-    public String authorsToString()
-    {
-        String result = "Par : ";
-        Iterator<String> iterator = this.authors.iterator();
-        while (iterator.hasNext())
-        {
-            result = result + iterator.next()+"\n";
-        }
-        return result;
-    }
-
-    public String categoriesToString()
-    {
-        String result = "Catégories : ";
-        Iterator<String> iterator = this.categories.iterator();
-        while (iterator.hasNext())
-        {
-            result = result + iterator.next()+"\n";
-        }
-        return result;
-    }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+
+        result.put("isbn_13", isbn);
+        result.put("title", title);
+        result.put("authors", authors);
+        result.put("categories", categories);
+        result.put("language", language);
+        result.put("description", description);
+        result.put("image_url", imageURL);
+        result.put("soumission_date", soumissionDate);
+        return result;
+    }
+
+    public Map<String, Object> toMapSimple() {
+        HashMap<String, Object> result = new HashMap<>();
+
         result.put("isbn_13", isbn);
         result.put("soumission_date", soumissionDate);
         return result;

@@ -68,15 +68,28 @@ public class Event_Detail_Fragment extends BaseFragment {
             @Override
             public void onResult(String s) {
             // je ne suis pas le créateur, je participe à l'evenement
-                if(current.getUid().equals(s)){
-                    participate_delete_btn.setText("Participer");
+                if(!current.getUid().equals(s)){
+                    dataBaseManager.checkIfUserGoToEvent(event, current.getUid().toString(), new DataBaseManager.ResultGetter<Boolean>() {
+                        @Override
+                        public void onResult(Boolean aBoolean) {
+                            // Si je participe deja
+                            if(aBoolean == true){
+                                participate_delete_btn.setVisibility(View.GONE);
+                            }// Si j'ai pas deja spécifié que je participe
+                            else {
+                                participate_delete_btn.setText("Participer");
+                            }
+                        }
+                    });
                 }
                 // je suis le créateur, je supprime l'evenement
                 else {
-                    participate_delete_btn.setText("Annuler");
+                    participate_delete_btn.setVisibility(View.GONE);
                 }
             }
         });
+
+
 
         /************************************ Participate to event / delete  event ********************************/
         participate_delete_btn.setOnClickListener(new View.OnClickListener() {
@@ -87,23 +100,22 @@ public class Event_Detail_Fragment extends BaseFragment {
                     @Override
                     public void onResult(String s) {
                         // je ne suis pas le créateur, je participe à l'evenement
-                        if(current.getUid().equals(s)){
-                            Log.d("comparaison", current.getUid()+" = ? "+s);
+                        if(!current.getUid().equals(s)){
                             dataBaseManager.getUserById(current.getUid(), new DataBaseManager.ResultGetter<User>() {
                                 @Override
                                 public void onResult(User user) {
                                     user.setId(current.getUid());
                                     dataBaseManager.addParticipantToEvent(event, user);
+
+
                                 }
                             });
-                        }
-                        // je suis le créateur, je supprime l'evenement
-                        else {
-                            // TODO : supprimer l'evenement ( annuler )
                         }
 
                     }
                 });
+
+
             }
         });
 

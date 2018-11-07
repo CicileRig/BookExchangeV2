@@ -51,12 +51,12 @@ public class My_Book_Detail_Fragment extends BaseFragment {
         book_title.setText(book.getTitle());
 
         book_authors = view.findViewById(R.id.book_authors);
-        book_authors.setText(book.authorsToString());
+        book_authors.setText(book.getAuthors());
 
         book_categories= view.findViewById(R.id.book_categorie);
         if(book.getCategories()!= null)
         {
-            book_categories.setText(book.categoriesToString());
+            book_categories.setText(book.getCategories());
         }else{
             book_categories.setVisibility(View.GONE);
         }
@@ -119,6 +119,10 @@ public class My_Book_Detail_Fragment extends BaseFragment {
             public void onClick(View view) {
                 dataBaseManager.deleteBookFromUser(book);
                 getActivity().getFragmentManager().popBackStack();
+
+                Intent intent = new Intent(getActivity(), NavigationActivity.class);
+                intent.putExtra("item_id",R.id.nav_books);
+                startActivity(intent);
             }
         });
         return view;

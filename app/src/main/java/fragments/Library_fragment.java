@@ -45,44 +45,19 @@ public class Library_fragment extends Fragment {
         library_books_list = new ArrayList<>();
         booksAdapter = new Book_List_Adapter(library_books_list, getActivity());
 
-        dataBaseManager.getUsersIsbnList(new DataBaseManager.ResultGetter<ArrayList<String>>() {
-            @Override
-            public void onResult(ArrayList<String> usersList) {
+       dataBaseManager.getAllBooksList(new DataBaseManager.ResultGetter<ArrayList<Book>>() {
+           @Override
+           public void onResult(ArrayList<Book> books) {
 
-                Iterator<String> it = usersList.iterator();
-                while (it.hasNext())
-                {
-                    dataBaseManager.getUserIsbnBooksList(it.next(), new DataBaseManager.ResultGetter<ArrayList<Book>>() {
-                        @Override
-                        public void onResult(final ArrayList<Book> booksList) {
+               if (getActivity()!=null){
+                   booksAdapter = new Book_List_Adapter(books, getActivity());
+                   libraryListview.setAdapter(booksAdapter);
 
-                            new BooksAPIManager(constructBooksIsbnRequest(booksList)){
-                                @Override
-                                protected void onPostExecute(ArrayList<Book> bookList) {
-                                    super.onPostExecute(bookList);
-                                    if(bookList != null)
-                                    {
-                                        Iterator<Book> it1  = booksList.iterator();
-                                        Iterator<Book> it2 = bookList.iterator();
-                                        while(it2.hasNext()){
-                                            it2.next().setSoumissionDate(it1.next().getSoumissionDate());
-                                        }
-                                        library_books_list =  addListToAnother(library_books_list,bookList);
-                                        HashSet<Book> hashSet = new HashSet<Book>();
-                                        hashSet.addAll(library_books_list);
-                                        library_books_list.clear();
-                                        library_books_list.addAll(hashSet);
-                                        libraryListview.setAdapter(booksAdapter);
-                                    }
-                                }
-                            }.execute();
-
-
-                        }
-                    });
-                }
-            }
-        });
+               }else{
+                   Log.d("Log", "getActivity est nul");
+               }
+           }
+       });
 
         /************************************ Select book from list action **********************************/
         libraryListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -108,43 +83,5 @@ public class Library_fragment extends Fragment {
         return view;
     }
 
-    public String constructBooksIsbnRequest(ArrayList<Book> bookList){
-
-        String result = "";
-        Iterator<Book> it = bookList.iterator();
-        while(it.hasNext()){
-
-            if(!result.equals("")){
-                result = result + "%20|%20";
-            }
-            Book book = it.next();
-
-            result = result + "isbn:"+book.getId();
-        }
-        return result;
-    }
-
-    public ArrayList<Book> addListToAnother(ArrayList<Book> globalList, ArrayList<Book> listToAdd)
-    {
-        ArrayList<Book> result = globalList;
-        Iterator<Book> it = listToAdd.iterator();
-        while (it.hasNext()) {
-
-            Book book = it.next();
-            if (!result.contains(book)) {
-                result.add(book);
-            }
-        }
-        return result;
-    }
-
-    public ArrayList<Book> deleteRedondance(ArrayList<Book> booksList){
-
-        HashSet<Book> hashSet = new HashSet<Book>();
-        hashSet.addAll(booksList);
-        booksList.clear();
-        booksList.addAll(hashSet);
-        return booksList;
-    }
 
 }

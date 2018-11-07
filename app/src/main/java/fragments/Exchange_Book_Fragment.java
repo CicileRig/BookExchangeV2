@@ -56,12 +56,12 @@ public class Exchange_Book_Fragment extends BaseFragment {
         book_title.setText(book.getTitle());
 
         book_authors = view.findViewById(R.id.book_authors);
-        book_authors.setText(book.authorsToString());
+        book_authors.setText(book.getAuthors());
 
         book_categories= view.findViewById(R.id.book_categorie);
         if(book.getCategories()!= null)
         {
-            book_categories.setText(book.categoriesToString());
+            book_categories.setText(book.getCategories());
         }else{
             book_categories.setVisibility(View.GONE);
         }

@@ -10,14 +10,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.bcs.bookexchangev2.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import classes.Event;
+import controllers.DataBaseManager;
 import controllers.ImageManager;
 
 public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnClickListener{
@@ -25,6 +29,9 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
     private ArrayList<Event> dataSet;
     Activity activity;
     Context mContext;
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private DataBaseManager dataBaseManager = new DataBaseManager();
+
     // View lookup cache
     private static class ViewHolder {
         TextView eventName;
@@ -32,6 +39,9 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
         TextView eventHour;
         TextView eventPlace;
         ImageView eventImage;
+        LinearLayout linearLayoutParticip;
+        ImageView participationIcon;
+        TextView participationText;
     }
 
     public Event_List_Adapter(ArrayList<Event> data, Activity activity) {
@@ -65,7 +75,7 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
         // Get the data item for this position
         Event event = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder; // view lookup cache stored in tag
+        final ViewHolder viewHolder; // view lookup cache stored in tag
 
         final View result;
 
@@ -79,6 +89,9 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
             viewHolder.eventHour =  convertView.findViewById(R.id.event_hour);
             viewHolder.eventImage =  convertView.findViewById(R.id.event_image_r);
             viewHolder.eventPlace = convertView.findViewById(R.id.event_place);
+            viewHolder.linearLayoutParticip = convertView.findViewById(R.id.participate_layout);
+            viewHolder.participationIcon= convertView.findViewById(R.id.imageViewParticip);
+            viewHolder.participationText = convertView.findViewById(R.id.textViewParticip);
 
             result=convertView;
 
@@ -88,8 +101,8 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
             result=convertView;
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        result.startAnimation(animation);
+       /* Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+        result.startAnimation(animation);*/
         lastPosition = position;
 
         viewHolder.eventName.setText(event.getEvent_name());
@@ -101,6 +114,27 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
             ImageManager imageManager = new ImageManager();
             viewHolder.eventImage.setImageBitmap(imageManager.decodeBase64(event.getEvent_image_url()));
         }
+
+        final View finalConvertView = convertView;
+        dataBaseManager.getEventCreatorId(event, new DataBaseManager.ResultGetter<String>() {
+            @Override
+            public void onResult(String s) {
+                if(currentUser.getUid().equals(s)){
+                    viewHolder.linearLayoutParticip.setVisibility(finalConvertView.VISIBLE);
+                    viewHolder.participationText.setText("Créateur");
+                    viewHolder.participationIcon.setImageResource(R.drawable.ic_creator);
+                }
+            }
+        });
+
+        dataBaseManager.checkIfUserGoToEvent(event, currentUser.getUid(), new DataBaseManager.ResultGetter<Boolean>() {
+            @Override
+            public void onResult(Boolean aBoolean) {
+                viewHolder.linearLayoutParticip.setVisibility(finalConvertView.VISIBLE);
+                viewHolder.participationText.setText("J y vais");
+                viewHolder.participationIcon.setImageResource(R.drawable.ic_heart);
+            }
+        });
 
         // Return the completed view to render on screen
         return convertView;

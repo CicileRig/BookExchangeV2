@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +25,7 @@ import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +37,7 @@ import fragments.BaseFragment;
 import fragments.Books_profil_fragment;
 import fragments.Events_profil_Fragment;
 import fragments.Library_fragment;
+import fragments.Search_Fragment;
 
 public class NavigationActivity extends AppCompatActivity {
 
@@ -157,9 +161,10 @@ public class NavigationActivity extends AppCompatActivity {
         //here we will get the search query
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(final String query) {
 
-                //do the search here
+                Log.d("LOG", "Je suis dans l'execution de la requete ");
+
                 return false;
             }
 

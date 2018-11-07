@@ -32,11 +32,11 @@ public class Book_List_Adapter extends ArrayAdapter<Book>  implements View.OnCli
         ImageView bookImage ;
     }
 
-    public Book_List_Adapter(ArrayList<Book> data, Activity activity) {
-        super(activity, R.layout.row_book_item, data);
+    public Book_List_Adapter(ArrayList<Book> data, Activity context) {
+        super(context, R.layout.row_book_item, data);
         this.dataSet = data;
         this.mContext=activity;
-        this.activity = activity;
+        this.activity = context;
 
     }
 
@@ -85,13 +85,17 @@ public class Book_List_Adapter extends ArrayAdapter<Book>  implements View.OnCli
             result=convertView;
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        result.startAnimation(animation);
+/*        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+        result.startAnimation(animation);*/
         lastPosition = position;
 
         viewHolder.bookTitle.setText(book.getTitle());
-        viewHolder.bookAuthors.setText(book.authorsToString());
-        viewHolder.bookSoumissionDate.setText("Publié le: "+book.getSoumissionDate());
+        viewHolder.bookAuthors.setText(book.getAuthors());
+        if(book.getSoumissionDate() !=  null){
+            viewHolder.bookSoumissionDate.setText("Dernière publication: "+book.getSoumissionDate());
+        }else{
+            viewHolder.bookSoumissionDate.setText("");
+        }
 
             if(book.getImageURL() != null){
                 Picasso.with(activity)

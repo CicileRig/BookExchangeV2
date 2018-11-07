@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,7 +40,7 @@ import controllers.ImageManager;
 import controllers.MyBounceInterpolator;
 import fragments.Books_profil_fragment;
 import fragments.Events_profil_Fragment;
-
+import fragments.Search_Fragment;
 
 
 public class ProfilActivity extends AppCompatActivity {
@@ -169,17 +170,18 @@ public class ProfilActivity extends AppCompatActivity {
         //here we will get the search query
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(final String query) {
+                Search_Fragment search_fragment = new Search_Fragment();
 
-                new BooksAPIManager(query){
-                    @Override
-                    protected void onPostExecute(ArrayList<Book> bookList) {
-                        super.onPostExecute(bookList);
-                    }
-                }.execute();
+
+                Bundle args = new Bundle();
+                args.putString("query", query);
+                search_fragment.setArguments(args);
+                fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, search_fragment).commit();
 
                 return false;
             }
+
 
             @Override
             public boolean onQueryTextChange(String newText) {

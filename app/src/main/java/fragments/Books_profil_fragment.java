@@ -1,11 +1,14 @@
 package fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.constraint.solver.widgets.Helper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -47,6 +50,7 @@ public class Books_profil_fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.books_fragment, container, false);
 
@@ -70,8 +74,13 @@ public class Books_profil_fragment extends Fragment {
                         while(it2.hasNext()){
                             it2.next().setSoumissionDate(it1.next().getSoumissionDate());
                         }
-                        Book_List_Adapter booksAdapter = new Book_List_Adapter(bookList, getActivity());
-                        book_listView.setAdapter(booksAdapter);
+                        if (getActivity()!=null){
+                            Book_List_Adapter booksAdapter = new Book_List_Adapter(bookList, getActivity());
+                            book_listView.setAdapter(booksAdapter);
+
+                        }else{
+                            Log.d("Log", "getActivity est nul");
+                        }
                     }
                 }.execute();
 
@@ -115,6 +124,18 @@ public class Books_profil_fragment extends Fragment {
             result = result + "isbn:"+book.getId();
         }
         return result;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity a;
+
+        if (context instanceof Activity){
+            a=(Activity) context;
+        }
+
     }
 
 

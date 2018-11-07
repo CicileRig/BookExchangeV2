@@ -1,8 +1,6 @@
 package controllers;
 
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.util.Base64;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,7 +11,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -21,7 +18,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import activities.MainActivity;
 import classes.Book;
 import classes.Event;
 import classes.User;
@@ -33,6 +29,8 @@ public class DataBaseManager {
     private FirebaseDatabase database ;
     private DatabaseReference myUsersRef ;
     private DatabaseReference myEventsRef ;
+    private DatabaseReference myBookstsRef ;
+    private SearchManager searchManager;
     JsonUtil jsonUtil = new JsonUtil();
     User user ;
     SecurityManager securityManager = new SecurityManager();
@@ -43,8 +41,11 @@ public class DataBaseManager {
         database = FirebaseDatabase.getInstance();
         myUsersRef = database.getReference("users");
         myEventsRef = database.getReference("events");
+        myBookstsRef = database.getReference("books");
+        searchManager = new SearchManager();
     }
 
+    // ajouter un nouvel utilisateur
     public void writeNewUser(User user) {
 
         mAuth = FirebaseAuth.getInstance();
@@ -63,6 +64,7 @@ public class DataBaseManager {
 
     }
 
+    // ajouter un livre à l'utilisateur actuel
     public void addBookToCurentUser(Book book)
     {
         mAuth = FirebaseAuth.getInstance();
@@ -75,13 +77,21 @@ public class DataBaseManager {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         book.setSoumissionDate(year+"-"+month+"-"+day);
-        Map<String, Object> postValues = book.toMap();
+        Map<String, Object> postValues = book.toMapSimple();
         Map<String, Object> childUpdates = new HashMap<>();
 
         childUpdates.put("/users/"+userId+"/books/" + securityManager.md5Hash(book.getId()), postValues);
         mDatabase.updateChildren(childUpdates);
+
+        postValues = book.toMap();
+        childUpdates = new HashMap<>();
+
+        childUpdates.put("/books/"+ securityManager.md5Hash(book.getId()), postValues);
+        mDatabase.updateChildren(childUpdates);
+
     }
 
+    // Ajouter un nouvel evenement
     public void addNewEvent(Event event)
     {
         event.setCreatorId(firebaseUser.getUid());
@@ -110,9 +120,11 @@ public class DataBaseManager {
         myEventsRef.child(securityManager.md5Hash(event.getEvent_name())).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Event event = dataSnapshot.getValue(Event.class);
-                getter.onResult(event.getCreatorId());
-                // TODO : faire marcher
+
+               HashMap value = (HashMap)dataSnapshot.getValue();
+               if(value != null){
+                   getter.onResult(value.get("creatorId").toString());
+               }
             }
 
             @Override
@@ -180,6 +192,8 @@ public class DataBaseManager {
         });
 
     }
+
+    // avoir la liste de tous les evenements
     public void getEventList(final ResultGetter<ArrayList<Event>> getter)
     {
         final ArrayList<Event> eventList = new ArrayList<>();
@@ -217,7 +231,48 @@ public class DataBaseManager {
         });
     }
 
+    // recuprer la liste de tous les livres
+    public void getAllBooksList(final ResultGetter<ArrayList<Book>> getter){
 
+        final ArrayList<Book> booksList = new ArrayList<>();
+        myBookstsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                HashMap value = (HashMap)dataSnapshot.getValue();
+                if(value != null){
+                    Set cles = value.keySet();
+                    Iterator it = cles.iterator();
+
+                    while (it.hasNext() ){
+                        String key = (String)it.next();
+                        final Book book = new Book();
+                        Map<String, Object> postValues = (Map)value.get(key);
+                        book.setTitle(postValues.get("title").toString());
+                        book.setIsbn(postValues.get("isbn_13").toString());
+                        book.setCategories(postValues.get("categories").toString());
+                        book.setAuthors(postValues.get("authors").toString());
+                        book.setDescription(postValues.get("description").toString());
+                        book.setSoumissionDate(postValues.get("soumission_date").toString());
+                        if(postValues.get("image_url") != null)
+                            book.setImageURL(postValues.get("image_url").toString());
+                        booksList.add(book);
+                    }
+                    getter.onResult(booksList);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    // avoir la liste des isbn de tous les livres
     public void getUsersIsbnList(final ResultGetter<ArrayList<String>> getter)
     {
 
@@ -244,6 +299,7 @@ public class DataBaseManager {
         });
     }
 
+    // avoir la liste des utilsateurs qui possede un livre
     public void getUsersHavingBook(final String bookId, final ResultGetter<ArrayList<User>> getter)
     {
 
@@ -288,6 +344,7 @@ public class DataBaseManager {
         });
     }
 
+    // recuperer un utilisateur par son identifiant
     public void getUserById(String userId, final ResultGetter<User> getter)
     {
 
@@ -305,6 +362,143 @@ public class DataBaseManager {
         });
     }
 
+    // trouver un livre par titre
+    public void findBookByTitle(final String title, final ResultGetter<ArrayList<Book>> getter){
+
+        final  ArrayList<Book> result = new ArrayList<>();
+        myBookstsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean trouv = false;
+                if(dataSnapshot != null) {
+                    HashMap value = (HashMap) dataSnapshot.getValue();
+                    Log.d("LOG",dataSnapshot.toString());
+                    if (value != null) {
+                        Set cles = value.keySet();
+                        Iterator it = cles.iterator();
+                        Book book = null;
+                        while (it.hasNext()) {
+
+                            String key = (String)it.next();
+                            Map<String, Object> postValues = (Map)value.get(key);
+                            if(searchManager.searchStringInOther(postValues.get("title").toString(), title))
+                            {
+
+                                trouv = true;
+                                book = new Book();
+                                book.setTitle(postValues.get("title").toString());
+                                book.setIsbn(postValues.get("isbn_13").toString());
+                                book.setCategories(postValues.get("categories").toString());
+                                book.setAuthors(postValues.get("authors").toString());
+                                book.setDescription(postValues.get("description").toString());
+                                book.setSoumissionDate(postValues.get("soumission_date").toString());
+                                if(postValues.get("image_url") != null)
+                                    book.setImageURL(postValues.get("image_url").toString());
+
+                                result.add(book);
+                            }
+                            getter.onResult(result);
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    // trouver un livre par auteur
+    public void findBookByAuthor(final String author, final ResultGetter<ArrayList<Book>> getter){
+
+        final  ArrayList<Book> result = new ArrayList<>();
+        myBookstsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean trouv = false;
+                if(dataSnapshot != null) {
+                    HashMap value = (HashMap) dataSnapshot.getValue();
+                    if (value != null) {
+                        Set cles = value.keySet();
+                        Iterator it = cles.iterator();
+                        Book book = null;
+                        while (it.hasNext()) {
+
+                            String key = (String)it.next();
+                            Map<String, Object> postValues = (Map)value.get(key);
+                            if(searchManager.searchStringInOther(postValues.get("authors").toString(), author))
+                            {
+                                trouv = true;
+                                book = new Book();
+                                book.setTitle(postValues.get("title").toString());
+                                book.setIsbn(postValues.get("isbn_13").toString());
+                                book.setCategories(postValues.get("categories").toString());
+                                book.setAuthors(postValues.get("authors").toString());
+                                book.setDescription(postValues.get("description").toString());
+                                book.setSoumissionDate(postValues.get("soumission_date").toString());
+                                if(postValues.get("image_url") != null)
+                                    book.setImageURL(postValues.get("image_url").toString());
+                                result.add(book);
+
+                            }
+                            getter.onResult(result);
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    // trouver un livre par isbn
+    public void findBookByIsbn(final String isbn,final ResultGetter<Book> getter){
+
+        myBookstsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean trouv = false;
+                if(dataSnapshot != null) {
+                    HashMap value = (HashMap) dataSnapshot.getValue();
+                    if (value != null) {
+                        Set cles = value.keySet();
+                        Iterator it = cles.iterator();
+                        while (it.hasNext()) {
+
+                            String key = (String)it.next();
+                            Map<String, Object> postValues = (Map)value.get(key);
+                            if(isbn.equals(postValues.get("authors").toString())){
+                                trouv = true;
+                                Book book = new Book();
+                                book.setTitle(postValues.get("title").toString());
+                                book.setIsbn(postValues.get("isbn_13").toString());
+                                book.setCategories(postValues.get("categories").toString());
+                                book.setAuthors(postValues.get("authors").toString());
+                                book.setDescription(postValues.get("description").toString());
+                                book.setSoumissionDate(postValues.get("soumission_date").toString());
+                                if(postValues.get("image_url") != null)
+                                    book.setImageURL(postValues.get("image_url").toString());
+                                getter.onResult(book);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    // recuperer la liste des ISBN des livres
     public void getUserIsbnBooksList(String userId, final ResultGetter<ArrayList<Book>> getter)
     {
         final ArrayList<Book> bookIsbnList= new ArrayList<>();
@@ -338,6 +532,7 @@ public class DataBaseManager {
         });
     }
 
+    // Avoir la liste des livres
     public void getAllBooks( final ResultGetter<ArrayList<Book>> getter)
     {
         myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -367,12 +562,22 @@ public class DataBaseManager {
         });
     }
 
+    // Supprimer un evenement
+    public void deleteEventFromUser(Event event) {
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("events").child(securityManager.md5Hash(event.getEvent_name())).removeValue();
+    }
+
+    // Supprimer un livre
     public void deleteBookFromUser(Book book) {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("users").child(firebaseUser.getUid().toString()).child("books").child(securityManager.md5Hash(book.getId())).removeValue();
+        mDatabase.child("books").child(securityManager.md5Hash(book.getId())).removeValue();
     }
 
+    // Vérifier si un utilisateur possede un livre
     public void checkIfUserHaveBook(final String isbnBook, final User user, final ResultGetter<Boolean> getter){
 
         myUsersRef = database.getReference("users").child(user.getId()).child("books");
@@ -391,6 +596,39 @@ public class DataBaseManager {
                             Map<String, Object> postValues = (Map)value.get(key);
                             if(isbnBook.equals(postValues.get("isbn_13").toString())){
                                 Log.d("comparaison : ", isbnBook+" "+postValues.get("isbn_13").toString());
+                                trouv = true ;
+                            }
+                        }
+                        getter.onResult(trouv);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    // Vérifier si un utilisateur participe a  un evenement
+    public void checkIfUserGoToEvent(Event event, final String userId, final ResultGetter<Boolean> getter){
+
+        myUsersRef = database.getReference("events").child(securityManager.md5Hash(event.getEvent_name())).child("participants");
+        myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot != null){
+                    HashMap value = (HashMap)dataSnapshot.getValue();
+                    if (value != null){
+                        Set cles = value.keySet();
+                        Iterator it = cles.iterator();
+                        Boolean trouv = false;
+                        while (it.hasNext() & !trouv){
+                            String key = (String)it.next();
+                            if(userId.equals(key)){
                                 trouv = true ;
                             }
                         }
