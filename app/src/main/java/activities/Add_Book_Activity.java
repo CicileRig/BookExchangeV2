@@ -91,6 +91,7 @@ public class Add_Book_Activity extends AppCompatActivity {
                         protected void onPostExecute(ArrayList<Book> bookList) {
                             super.onPostExecute(bookList);
                             Book_List_Adapter booksAdapter = new Book_List_Adapter(bookList, Add_Book_Activity.this);
+                            if(booksAdapter != null)
                             booksListView.setAdapter(booksAdapter);
                         }
                     }.execute();

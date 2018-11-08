@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -45,6 +46,16 @@ public class Search_Fragment extends BaseFragment {
         // Views :
         textView = view.findViewById(R.id.finded_book);
         finded_books_lv = view.findViewById(R.id.finded_books);
+
+        finded_books_lv.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
 
 
         final DataBaseManager dataBaseManager = new DataBaseManager();

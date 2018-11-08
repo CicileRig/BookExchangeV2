@@ -62,7 +62,13 @@ public class ProfilActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("SESSION", MODE_PRIVATE);
         userTextView.setText(prefs.getString("name", null)+" "+prefs.getString("surname", null));
-        userProfilPhoto.setImageBitmap(imageManager.decodeBase64(prefs.getString("image_url", null)));
+
+        dataBaseManager.getUserById(FirebaseAuth.getInstance().getCurrentUser().getUid(), new DataBaseManager.ResultGetter<User>() {
+            @Override
+            public void onResult(User user) {
+                userProfilPhoto.setImageBitmap(imageManager.decodeBase64(user.getProfilPhotoUri()));
+            }
+        });
 
         // getting the number of books of the current user
         dataBaseManager.getCUserBookNumber(new DataBaseManager.ResultGetter<String>() {

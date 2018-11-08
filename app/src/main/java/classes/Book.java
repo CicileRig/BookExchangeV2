@@ -1,12 +1,15 @@
 package classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Book implements Serializable{
+public class Book implements Serializable, Parcelable{
 
     private String isbn;
     private String title;
@@ -37,6 +40,17 @@ public class Book implements Serializable{
 
     public Book() {
 
+    }
+
+    private Book(Parcel in) {
+        title = in.readString();
+        isbn = in.readString();
+        authors = in.readString();
+        categories = in.readString();
+        language = in.readString();
+        imageURL = in.readString();
+        description = in.readString();
+        soumissionDate = in.readString();
     }
 
     public String getId() {
@@ -157,6 +171,36 @@ public class Book implements Serializable{
         return isbn.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return title  ;
+    }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int i) {
+        out.writeString(title);
+        out.writeString(isbn);
+        out.writeString(authors);
+        out.writeString(categories);
+        out.writeString(language);
+        out.writeString(imageURL);
+        out.writeString(description);
+        out.writeString(soumissionDate);
+    }
+
+    public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 }

@@ -37,6 +37,7 @@ public class BooksAPIManager extends AsyncTask<Void, Void, ArrayList<Book> > {
 
         ArrayList<Book> bookList = new ArrayList<>();
         try {
+            search  = search.replace(" ","%20");
             URL url = new URL(API_URL  + search);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             try {

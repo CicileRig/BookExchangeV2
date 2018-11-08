@@ -41,7 +41,7 @@ import controllers.DataBaseManager;
 
 public class Books_profil_fragment extends Fragment {
 
-    private ArrayList<Book> books_list;
+    private ArrayList<Book> my_books_list;
     private ListView book_listView;
     private Book_List_Adapter booksAdapter;
     private DataBaseManager dataBaseManager = new DataBaseManager();
@@ -56,37 +56,47 @@ public class Books_profil_fragment extends Fragment {
 
 
         /*************************************** Populate books list ********************************************/
-        books_list = new ArrayList<Book>();
-        booksAdapter = new Book_List_Adapter(books_list, getActivity());
+        my_books_list = new ArrayList<Book>();
+        booksAdapter = new Book_List_Adapter(my_books_list, getActivity());
         book_listView = view.findViewById(R.id.books_list);
 
-        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
-        dataBaseManager.getUserIsbnBooksList(userId, new DataBaseManager.ResultGetter<ArrayList<Book>>() {
-            @Override
-            public void onResult(final ArrayList<Book> booksList) {
-                new BooksAPIManager(constructBooksIsbnRequest(booksList)){
-                    @Override
-                    protected void onPostExecute(ArrayList<Book> bookList) {
-                        super.onPostExecute(bookList);
+        if(savedInstanceState == null || !savedInstanceState.containsKey("key")) {
 
-                        Iterator<Book> it1  = booksList.iterator();
-                        Iterator<Book> it2 = bookList.iterator();
-                        while(it2.hasNext()){
-                            it2.next().setSoumissionDate(it1.next().getSoumissionDate());
+            final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+            dataBaseManager.getUserIsbnBooksList(userId, new DataBaseManager.ResultGetter<ArrayList<Book>>() {
+                @Override
+                public void onResult(final ArrayList<Book> booksList) {
+                    new BooksAPIManager(constructBooksIsbnRequest(booksList)){
+                        @Override
+                        protected void onPostExecute(ArrayList<Book> bookList) {
+                            super.onPostExecute(bookList);
+
+                            Iterator<Book> it1  = booksList.iterator();
+                            Iterator<Book> it2 = bookList.iterator();
+                            while(it2.hasNext()){
+                                it2.next().setSoumissionDate(it1.next().getSoumissionDate());
+                            }
+                            if (getActivity()!=null){
+                                my_books_list = booksList;
+                                booksAdapter = new Book_List_Adapter(bookList, getActivity());
+                                book_listView.setAdapter(booksAdapter);
+
+                            }else{
+                                Log.d("Log", "getActivity est nul");
+                            }
                         }
-                        if (getActivity()!=null){
-                            Book_List_Adapter booksAdapter = new Book_List_Adapter(bookList, getActivity());
-                            book_listView.setAdapter(booksAdapter);
-
-                        }else{
-                            Log.d("Log", "getActivity est nul");
-                        }
-                    }
-                }.execute();
+                    }.execute();
 
 
-            }
-        });
+                }
+            });
+        }
+        else {
+            my_books_list = savedInstanceState.getParcelableArrayList("key");
+            booksAdapter = new Book_List_Adapter(my_books_list, getActivity());
+            book_listView.setAdapter(booksAdapter);
+        }
+
         book_listView.setAdapter(booksAdapter);
 
         /************************************ Select book from list action **********************************/
@@ -137,6 +147,14 @@ public class Books_profil_fragment extends Fragment {
         }
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("key", my_books_list);
+        super.onSaveInstanceState(outState);
+    }
+
+
 
 
 }

@@ -45,19 +45,29 @@ public class Library_fragment extends Fragment {
         library_books_list = new ArrayList<>();
         booksAdapter = new Book_List_Adapter(library_books_list, getActivity());
 
-       dataBaseManager.getAllBooksList(new DataBaseManager.ResultGetter<ArrayList<Book>>() {
-           @Override
-           public void onResult(ArrayList<Book> books) {
+        if(savedInstanceState == null || !savedInstanceState.containsKey("key")) {
 
-               if (getActivity()!=null){
-                   booksAdapter = new Book_List_Adapter(books, getActivity());
-                   libraryListview.setAdapter(booksAdapter);
+            dataBaseManager.getAllBooksList(new DataBaseManager.ResultGetter<ArrayList<Book>>() {
+                @Override
+                public void onResult(ArrayList<Book> books) {
 
-               }else{
-                   Log.d("Log", "getActivity est nul");
-               }
-           }
-       });
+                    if (getActivity()!=null){
+                        library_books_list = books;
+                        booksAdapter = new Book_List_Adapter(books, getActivity());
+                        libraryListview.setAdapter(booksAdapter);
+
+                    }else{
+                        Log.d("Log", "getActivity est nul");
+                    }
+                }
+            });
+        }
+        else {
+            library_books_list = savedInstanceState.getParcelableArrayList("key");
+            booksAdapter = new Book_List_Adapter(library_books_list, getActivity());
+            libraryListview.setAdapter(booksAdapter);
+        }
+
 
         /************************************ Select book from list action **********************************/
         libraryListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,6 +92,13 @@ public class Library_fragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("key", library_books_list);
+        super.onSaveInstanceState(outState);
+    }
+
 
 
 }

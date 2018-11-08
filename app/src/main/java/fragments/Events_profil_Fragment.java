@@ -43,19 +43,29 @@ public class Events_profil_Fragment extends Fragment {
         EventAdapter = new Event_List_Adapter(events_list, getActivity());
         event_listView = view.findViewById(R.id.events_list);
 
-        dataBaseManager.getEventList(new DataBaseManager.ResultGetter<ArrayList<Event>>() {
-            @Override
-            public void onResult(final ArrayList<Event> eventList) {
-                if (getActivity()!=null){
+        if(savedInstanceState == null || !savedInstanceState.containsKey("key")) {
 
-                    Event_List_Adapter booksAdapter = new Event_List_Adapter(eventList, getActivity());
-                    event_listView.setAdapter(booksAdapter);
+            dataBaseManager.getEventList(new DataBaseManager.ResultGetter<ArrayList<Event>>() {
+                @Override
+                public void onResult(final ArrayList<Event> eventList) {
+                    if (getActivity()!=null){
 
-                }else{
-                    Log.d("Log", "getActivity est nul");
+                        Event_List_Adapter booksAdapter = new Event_List_Adapter(eventList, getActivity());
+                        event_listView.setAdapter(booksAdapter);
+
+                    }else{
+                        Log.d("Log", "getActivity est nul");
+                    }
                 }
-            }
-        });
+            });
+
+        }
+        else {
+            events_list = savedInstanceState.getParcelableArrayList("key");
+            EventAdapter = new Event_List_Adapter(events_list, getActivity());
+            event_listView.setAdapter(EventAdapter);
+        }
+
 
         event_listView.setAdapter(EventAdapter);
 
@@ -79,5 +89,13 @@ public class Events_profil_Fragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("key", events_list);
+        super.onSaveInstanceState(outState);
+    }
+
+
 
 }

@@ -1,11 +1,14 @@
 package classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Event implements Serializable {
+public class Event implements Serializable, Parcelable {
 
     private String event_id;
     private String event_name;
@@ -30,6 +33,17 @@ public class Event implements Serializable {
     }
 
     public Event(){
+
+    }
+
+    public Event(Parcel in){
+        event_name = in.readString();
+        event_date = in.readString();
+        event_hour = in.readString();
+        event_place = in.readString();
+        event_description = in.readString();
+        event_image_url = in.readString();
+        creatorId = in.readString();
 
     }
 
@@ -119,4 +133,35 @@ public class Event implements Serializable {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return event_name  ;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int i) {
+
+        out.writeString(event_name);
+        out.writeString(event_date);
+        out.writeString(event_hour);
+        out.writeString(event_place);
+        out.writeString(event_description);
+        out.writeString(event_image_url);
+        out.writeString(creatorId);
+    }
+
+    public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
 }
