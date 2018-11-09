@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
@@ -28,6 +29,7 @@ public class Library_fragment extends Fragment {
 
     private ListView libraryListview ;
     private ArrayList<Book> library_books_list;
+    private ProgressBar progressBar;
     private Book_List_Adapter booksAdapter;
 
     private DataBaseManager dataBaseManager = new DataBaseManager();
@@ -40,6 +42,7 @@ public class Library_fragment extends Fragment {
 
         // Views :
         libraryListview = view.findViewById(R.id.libraryListview);
+        progressBar =  view.findViewById(R.id.progressBar);
 
         /*************************************** Populate books list ********************************************/
         library_books_list = new ArrayList<>();
@@ -47,6 +50,8 @@ public class Library_fragment extends Fragment {
 
         if(savedInstanceState == null || !savedInstanceState.containsKey("key")) {
 
+            progressBar.setVisibility(View.VISIBLE);
+            libraryListview.setVisibility(View.GONE);
             dataBaseManager.getAllBooksList(new DataBaseManager.ResultGetter<ArrayList<Book>>() {
                 @Override
                 public void onResult(ArrayList<Book> books) {
@@ -55,6 +60,8 @@ public class Library_fragment extends Fragment {
                         library_books_list = books;
                         booksAdapter = new Book_List_Adapter(books, getActivity());
                         libraryListview.setAdapter(booksAdapter);
+                        progressBar.setVisibility(View.GONE);
+                        libraryListview.setVisibility(View.VISIBLE);
 
                     }else{
                         Log.d("Log", "getActivity est nul");

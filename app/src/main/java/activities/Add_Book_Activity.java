@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SearchView;
@@ -28,6 +29,7 @@ public class Add_Book_Activity extends AppCompatActivity {
     private ListView booksListView;
     private SearchView searchView;
     private RadioGroup languageRadioGroup ;
+    private ProgressBar progressBar;
 
     private DataBaseManager dataBaseManager = new DataBaseManager();
     private android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
@@ -41,6 +43,8 @@ public class Add_Book_Activity extends AppCompatActivity {
         booksListView  = findViewById(R.id.searchBookListview);
         searchView = findViewById(R.id.booksSearchView);
         languageRadioGroup = findViewById(R.id.radioGroup2);
+        progressBar =  findViewById(R.id.progressBar);
+
 
         /************************************* Make listview scralling inside nestedScrallView *******************************/
 
@@ -72,6 +76,9 @@ public class Add_Book_Activity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
+                progressBar.setVisibility(View.VISIBLE);
+                booksListView.setVisibility(View.GONE);
+
                     if(languageRadioGroup.getCheckedRadioButtonId() != -1)
                     {
                         int selectedId = languageRadioGroup.getCheckedRadioButtonId();
@@ -93,6 +100,8 @@ public class Add_Book_Activity extends AppCompatActivity {
                             Book_List_Adapter booksAdapter = new Book_List_Adapter(bookList, Add_Book_Activity.this);
                             if(booksAdapter != null)
                             booksListView.setAdapter(booksAdapter);
+                            progressBar.setVisibility(View.GONE);
+                            booksListView.setVisibility(View.VISIBLE);
                         }
                     }.execute();
 

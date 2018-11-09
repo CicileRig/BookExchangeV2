@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.example.bcs.bookexchangev2.R;
 
@@ -23,6 +24,7 @@ public class Events_profil_Fragment extends Fragment {
 
     private ArrayList<Event> events_list;
     private ListView event_listView;
+    private ProgressBar progressBar;
     private Event_List_Adapter EventAdapter;
     private DataBaseManager dataBaseManager = new DataBaseManager();
 
@@ -42,9 +44,12 @@ public class Events_profil_Fragment extends Fragment {
         events_list = new ArrayList<Event>();
         EventAdapter = new Event_List_Adapter(events_list, getActivity());
         event_listView = view.findViewById(R.id.events_list);
+        progressBar =  view.findViewById(R.id.progressBar);
 
         if(savedInstanceState == null || !savedInstanceState.containsKey("key")) {
 
+            progressBar.setVisibility(View.VISIBLE);
+            event_listView.setVisibility(View.GONE);
             dataBaseManager.getEventList(new DataBaseManager.ResultGetter<ArrayList<Event>>() {
                 @Override
                 public void onResult(final ArrayList<Event> eventList) {
@@ -52,6 +57,8 @@ public class Events_profil_Fragment extends Fragment {
 
                         Event_List_Adapter booksAdapter = new Event_List_Adapter(eventList, getActivity());
                         event_listView.setAdapter(booksAdapter);
+                        progressBar.setVisibility(View.GONE);
+                        event_listView.setVisibility(View.VISIBLE);
 
                     }else{
                         Log.d("Log", "getActivity est nul");

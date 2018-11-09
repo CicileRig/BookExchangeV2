@@ -43,9 +43,9 @@ public class APIActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_api);
 
-        responseView = (TextView) findViewById(R.id.responseView);
-        emailText = (EditText) findViewById(R.id.emailText);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        responseView =  findViewById(R.id.responseView);
+        emailText = findViewById(R.id.emailText);
+        progressBar =  findViewById(R.id.progressBar);
 
         Button queryButton = (Button) findViewById(R.id.queryButton);
         queryButton.setOnClickListener(new View.OnClickListener() {
