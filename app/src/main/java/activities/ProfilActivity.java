@@ -159,10 +159,7 @@ public class ProfilActivity extends AppCompatActivity {
 
     public void configureBottomNavigationBar(BottomNavigationView bottomNavigationView)
     {
-       /* Events_profil_Fragment events_profil_fragment = new Events_profil_Fragment();
-        fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, events_profil_fragment).commit();*/
-
-        Reserver events_profil_fragment = new Reserver();
+        Events_profil_Fragment events_profil_fragment = new Events_profil_Fragment();
         fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, events_profil_fragment).commit();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
