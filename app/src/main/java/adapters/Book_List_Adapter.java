@@ -95,6 +95,7 @@ public class Book_List_Adapter extends ArrayAdapter<Book>  implements View.OnCli
             viewHolder.bookSoumissionDate.setText("Dernière publication: "+book.getSoumissionDate());
         }else{
             viewHolder.bookSoumissionDate.setText("");
+            convertView.findViewById(R.id.imageView13).setVisibility(View.GONE);
         }
 
             if(book.getImageURL() != null){

@@ -53,12 +53,12 @@ public class Events_profil_Fragment extends Fragment {
             dataBaseManager.getEventList(new DataBaseManager.ResultGetter<ArrayList<Event>>() {
                 @Override
                 public void onResult(final ArrayList<Event> eventList) {
+                    progressBar.setVisibility(View.GONE);
+                    event_listView.setVisibility(View.VISIBLE);
                     if (getActivity()!=null){
 
                         Event_List_Adapter booksAdapter = new Event_List_Adapter(eventList, getActivity());
                         event_listView.setAdapter(booksAdapter);
-                        progressBar.setVisibility(View.GONE);
-                        event_listView.setVisibility(View.VISIBLE);
 
                     }else{
                         Log.d("Log", "getActivity est nul");

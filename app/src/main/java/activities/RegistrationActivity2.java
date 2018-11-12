@@ -113,7 +113,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
         myAnim.setInterpolator(interpolator);
 
         final User user  = (User) this.getIntent().getSerializableExtra("user");
-        user.setPhoneNumber(phonenumberEdittext.getText().toString());
+        if(!phonenumberEdittext.getText().toString().equals("+33")){
+            user.setPhoneNumber(phonenumberEdittext.getText().toString());
+        }
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -59,20 +59,57 @@
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     app:titleEnabled="false">
 
+
                     <android.support.v7.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_horizontal"
                         android:orientation="vertical">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/overlapImage"
+                        <android.support.constraint.ConstraintLayout
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="50dp"
-                            android:src="@drawable/photo_profil" />
+                            android:layout_marginTop="50dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/overlapImage"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true"
+
+                                android:layout_margin="0dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:src="@drawable/photo_profil"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <Button
+                                android:id="@+id/modify_profil_btn"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_margin="0dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/shape_rectangle_normal"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                        </android.support.constraint.ConstraintLayout>
+
 
                         <TextView
                             android:id="@+id/username"

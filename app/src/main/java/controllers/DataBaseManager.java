@@ -64,6 +64,18 @@ public class DataBaseManager {
 
     }
 
+    // Modifier le profil d'un utilisateur
+    public void modifyUser(User user) {
+
+        String  userId =  firebaseUser.getUid();
+
+        myUsersRef.child(userId).child("name").setValue(user.getName());
+        myUsersRef.child(userId).child("surname").setValue(user.getSurname());
+        myUsersRef.child(userId).child("adress").setValue(user.getAdress());
+        myUsersRef.child(userId).child("phoneNumber").setValue(user.getPhoneNumber());
+        myUsersRef.child(userId).child("profilPhotoUri").setValue(user.getProfilPhotoUri());
+    }
+
     // ajouter un livre à l'utilisateur actuel
     public void addBookToCurentUser(Book book)
     {
@@ -319,6 +331,8 @@ public class DataBaseManager {
                     user.setName(postValues.get("name").toString());
                     user.setSurname(postValues.get("surname").toString());
                     user.setAdress(postValues.get("adress").toString());
+                    if(postValues.get("phoneNumber") != null)
+                        user.setPhoneNumber(postValues.get("phoneNumber").toString());
                     user.setMailAdress(postValues.get("mailAdress").toString());
                     if(postValues.get("profilPhotoUri") != null)
                         user.setProfilPhotoUri(postValues.get("profilPhotoUri").toString());
@@ -326,7 +340,7 @@ public class DataBaseManager {
                                 checkIfUserHaveBook(bookId, user, new DataBaseManager.ResultGetter<Boolean>(){
                                     @Override
                                     public void onResult(Boolean trouv) {
-                                        if( trouv == true){
+                                        if( trouv == true && user.getId() != firebaseUser.getUid().toString()){
                                             usersIdList.add(user);
                                             getter.onResult(usersIdList);
                                         }
@@ -570,7 +584,6 @@ public class DataBaseManager {
 
     // Supprimer un livre
     public void deleteBookFromUser(Book book) {
-
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("users").child(firebaseUser.getUid().toString()).child("books").child(securityManager.md5Hash(book.getId())).removeValue();
         mDatabase.child("books").child(securityManager.md5Hash(book.getId())).removeValue();

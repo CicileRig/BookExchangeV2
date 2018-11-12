@@ -102,14 +102,13 @@
                     android:background="@drawable/ic_call" />
 
                 <TextView
-                    android:id="@+id/textView12"
+                    android:id="@+id/user_phone_number_e"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:layout_weight="1"
-                    android:text="0623458789" />
+                    android:layout_weight="1" />
             </LinearLayout>
 
         </android.support.v7.widget.CardView>

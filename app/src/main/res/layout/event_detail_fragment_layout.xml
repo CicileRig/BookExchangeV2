@@ -47,32 +47,86 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/event_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:minLines="1"
-                android:singleLine="false"
-                android:text="date"
-                android:textSize="18dp" />
 
-            <TextView
-                android:id="@+id/event_hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="4dp"
-                android:text="heure"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/book_authors"
-                app:layout_constraintTop_toBottomOf="@+id/book_authors" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView17"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/ic_date" />
+
+                <TextView
+                    android:id="@+id/event_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:paddingRight="10dp"
+                    android:text="heure"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="@+id/book_authors"
+                    app:layout_constraintTop_toBottomOf="@+id/book_authors" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView18"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/ic_hour" />
+
+                <TextView
+                    android:id="@+id/event_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:minLines="1"
+                    android:paddingRight="10dp"
+                    android:singleLine="false"
+                    android:text="date"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView19"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/ic_location" />
+
+                <TextView
+                    android:id="@+id/event_place"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:minLines="1"
+                    android:paddingRight="10dp"
+                    android:singleLine="false"
+                    android:text="Place"
+                    android:textSize="18dp" />
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -134,7 +188,7 @@
             android:background="@drawable/button_style"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text=""
+            android:text="Participer"
             android:textAllCaps="false"
             android:textColor="@android:color/background_light"
             android:textSize="18dp" />

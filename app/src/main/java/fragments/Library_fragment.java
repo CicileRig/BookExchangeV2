@@ -52,16 +52,16 @@ public class Library_fragment extends Fragment {
 
             progressBar.setVisibility(View.VISIBLE);
             libraryListview.setVisibility(View.GONE);
+
             dataBaseManager.getAllBooksList(new DataBaseManager.ResultGetter<ArrayList<Book>>() {
                 @Override
                 public void onResult(ArrayList<Book> books) {
-
+                    progressBar.setVisibility(View.GONE);
+                    libraryListview.setVisibility(View.VISIBLE);
                     if (getActivity()!=null){
                         library_books_list = books;
                         booksAdapter = new Book_List_Adapter(books, getActivity());
                         libraryListview.setAdapter(booksAdapter);
-                        progressBar.setVisibility(View.GONE);
-                        libraryListview.setVisibility(View.VISIBLE);
 
                     }else{
                         Log.d("Log", "getActivity est nul");

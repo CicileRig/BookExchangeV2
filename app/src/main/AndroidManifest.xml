@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,23 +12,23 @@
         android:roundIcon="@drawable/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
-        <activity android:name="activities.MainActivity" >
+        <activity android:name="activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity android:name="activities.RegistrationActivity" />
-        <activity android:name="activities.ProfilActivity" >
-        </activity>
-        <activity android:name="activities.NavigationActivity">
-        </activity>
+        <activity android:name="activities.ProfilActivity"></activity>
+        <activity android:name="activities.NavigationActivity"></activity>
         <activity android:name="activities.RegistrationActivity2" />
         <activity android:name="activities.APIActivity" />
         <activity android:name="activities.Add_Book_Activity" />
-        <activity android:name="activities.Add_Event_Activity">
-        </activity>
+        <activity android:name="activities.Add_Event_Activity"></activity>
+        <activity android:name=".ModifyProfil"></activity>
     </application>
 
 </manifest>

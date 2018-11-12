@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +34,7 @@ public class Event_Detail_Fragment extends BaseFragment {
     private  TextView event_date;
     private  TextView event_hour;
     private  TextView event_description;
+    private  TextView event_place;
     private  ImageView event_image;
     private Button participate_delete_btn;
 
@@ -50,6 +52,7 @@ public class Event_Detail_Fragment extends BaseFragment {
         event_title = view.findViewById(R.id.event_title);
         event_date = view.findViewById(R.id.event_date);
         event_hour = view.findViewById(R.id.event_hour);
+        event_place = view.findViewById(R.id.event_place);
         event_description = view.findViewById(R.id.event_description);
         event_image = view.findViewById(R.id.event_photo_d);
         participate_delete_btn = view.findViewById(R.id.participate_delete_btn);
@@ -61,8 +64,10 @@ public class Event_Detail_Fragment extends BaseFragment {
         event_title.setText(event.getEvent_name());
         event_date.setText(event.getEvent_date());
         event_hour.setText(event.getEvent_hour());
+        event_place.setText(event.getEvent_place());
         event_description.setText(event.getEvent_description());
         event_image.setImageBitmap(imageManager.decodeBase64(event.getEvent_image_url()));
+        participate_delete_btn.setText("Participer");
 
         dataBaseManager.getEventCreatorId(event, new DataBaseManager.ResultGetter<String>() {
             @Override
@@ -74,7 +79,8 @@ public class Event_Detail_Fragment extends BaseFragment {
                         public void onResult(Boolean aBoolean) {
                             // Si je participe deja
                             if(aBoolean == true){
-                                participate_delete_btn.setVisibility(View.GONE);
+                                participate_delete_btn.setClickable(false);
+                                participate_delete_btn.setEnabled(false);
                             }// Si j'ai pas deja spécifié que je participe
                             else {
                                 participate_delete_btn.setText("Participer");
@@ -107,9 +113,11 @@ public class Event_Detail_Fragment extends BaseFragment {
                                     user.setId(current.getUid());
                                     dataBaseManager.addParticipantToEvent(event, user);
 
-
                                 }
                             });
+                        }else{
+                            participate_delete_btn.setClickable(false);
+                            participate_delete_btn.setEnabled(false);
                         }
 
                     }

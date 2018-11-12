@@ -37,6 +37,7 @@ public class Contact_User_Fragment extends BaseFragment {
     private ImageView user_image_e ;
     private TextView user_name_e;
     private TextView user_adress_e;
+    private TextView user_phone_number_e;
 
     private ImageManager imageManager= new ImageManager();
 
@@ -56,6 +57,7 @@ public class Contact_User_Fragment extends BaseFragment {
         user_image_e = view.findViewById(R.id.user_image_e);
         user_name_e = view.findViewById(R.id.user_name_e);
         user_adress_e = view.findViewById(R.id.user_adress_e);
+        user_phone_number_e = view.findViewById(R.id.user_phone_number_e);
 
         linearLayout.setVisibility(View.GONE);
 
@@ -64,6 +66,9 @@ public class Contact_User_Fragment extends BaseFragment {
         user_image_e.setImageBitmap(imageManager.decodeBase64(user.getProfilPhotoUri()));
         user_name_e.setText(user.getName()+ " "+ user.getSurname());
         user_adress_e.setText(user.getAdress());
+
+        if(user.getPhoneNumber() != null)
+        user_phone_number_e.setText(user.getPhoneNumber());
 
 
         /***************************** Initialisations ******************************************************/
@@ -74,12 +79,20 @@ public class Contact_User_Fragment extends BaseFragment {
         textMessage.setText("Je suis interessé(e) par votre offre du livre "+bookTitle);
 
         /****************************** call action *********************************************************/
+        if(user.getPhoneNumber() == null){
+
+            contact_by_callBtn.setClickable(false);
+            contact_by_callBtn.setEnabled(false);
+            user_phone_number_e.setText("Pas disponible");
+
+        }
         contact_by_callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:"+user.getPhoneNumber()));
-                startActivity(callIntent);
+
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:"+user.getPhoneNumber()));
+                    startActivity(callIntent);
             }
         });
 

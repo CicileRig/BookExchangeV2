@@ -75,7 +75,6 @@ public class Books_profil_fragment extends Fragment {
                         @Override
                         protected void onPostExecute(ArrayList<Book> bookList) {
                             super.onPostExecute(bookList);
-
                             Iterator<Book> it1  = booksList.iterator();
                             Iterator<Book> it2 = bookList.iterator();
                             while(it2.hasNext()){
@@ -85,14 +84,15 @@ public class Books_profil_fragment extends Fragment {
                                 my_books_list = booksList;
                                 booksAdapter = new Book_List_Adapter(bookList, getActivity());
                                 book_listView.setAdapter(booksAdapter);
+                                if (bookList.isEmpty()){
+                                    progressBar.setVisibility(View.GONE);
+                                }
 
                             }else{
                                 Log.d("Log", "getActivity est nul");
                             }
                         }
                     }.execute();
-                    progressBar.setVisibility(View.GONE);
-                    book_listView.setVisibility(View.VISIBLE);
 
 
                 }
@@ -103,7 +103,8 @@ public class Books_profil_fragment extends Fragment {
             booksAdapter = new Book_List_Adapter(my_books_list, getActivity());
             book_listView.setAdapter(booksAdapter);
         }
-
+        progressBar.setVisibility(View.GONE);
+        book_listView.setVisibility(View.VISIBLE);
         book_listView.setAdapter(booksAdapter);
 
         /************************************ Select book from list action **********************************/

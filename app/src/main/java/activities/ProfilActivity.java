@@ -13,9 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.bcs.bookexchangev2.ModifyProfil;
 import com.example.bcs.bookexchangev2.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -36,6 +39,7 @@ public class ProfilActivity extends AppCompatActivity {
     private static DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
+    private Button modify_profil_btn;
 
     private android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
     private DataBaseManager dataBaseManager = new DataBaseManager();
@@ -57,6 +61,7 @@ public class ProfilActivity extends AppCompatActivity {
         userProfilPhoto = findViewById(R.id.overlapImage);
         booksNumber = findViewById(R.id.myBooksNumber);
         eventsNumber = findViewById(R.id.myEventsNumber);
+        modify_profil_btn = findViewById(R.id.modify_profil_btn);
 
         /*************************************** Display user informations ****************************************/
 
@@ -118,6 +123,13 @@ public class ProfilActivity extends AppCompatActivity {
         configureBottomNavigationBar(bottomNavigationView);
 
 
+        /*********************************************** Modify profil button **********************************************/
+        modify_profil_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ProfilActivity.this, ModifyProfil.class));
+            }
+        });
     }
 
     @SuppressLint("MissingSuperCall")
@@ -147,7 +159,10 @@ public class ProfilActivity extends AppCompatActivity {
 
     public void configureBottomNavigationBar(BottomNavigationView bottomNavigationView)
     {
-        Events_profil_Fragment events_profil_fragment = new Events_profil_Fragment();
+       /* Events_profil_Fragment events_profil_fragment = new Events_profil_Fragment();
+        fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, events_profil_fragment).commit();*/
+
+        Reserver events_profil_fragment = new Reserver();
         fragmentManager.beginTransaction().replace(R.id.dynamic_fragment_frame_layout, events_profil_fragment).commit();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
