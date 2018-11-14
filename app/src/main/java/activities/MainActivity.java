@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Adresse mail ou mot de passe incorrect",
                                     Toast.LENGTH_SHORT).show();
-                            mEmailField.setText("");
+                            mPasswordField.setText("");
                             updateUI(null);
                         }
 

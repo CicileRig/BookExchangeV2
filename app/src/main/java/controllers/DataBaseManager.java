@@ -364,8 +364,34 @@ public class DataBaseManager {
         myUsersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(User.class);
+                if(dataSnapshot != null)
+                {
+                    user = dataSnapshot.getValue(User.class);
+                }
                 getter.onResult(user);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    // recuperer un utilisateur par son identifiant
+    public void getCurrentUser(final ResultGetter<User> getter)
+    {
+
+        myUsersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot != null)
+                {
+                    user = dataSnapshot.getValue(User.class);
+                }
+                getter.onResult(user);
+
             }
 
             @Override
@@ -624,28 +650,29 @@ public class DataBaseManager {
 
 
     // Vérifier si un utilisateur participe a  un evenement
-    public void checkIfUserGoToEvent(Event event, final String userId, final ResultGetter<Boolean> getter){
+    public void checkIfUserGoToEvent(Event event, String userId, final ResultGetter<Boolean> getter){
 
+        final String userIdCopie = userId;
         myUsersRef = database.getReference("events").child(securityManager.md5Hash(event.getEvent_name())).child("participants");
         myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                Boolean trouv = false;
                 if(dataSnapshot != null){
                     HashMap value = (HashMap)dataSnapshot.getValue();
                     if (value != null){
                         Set cles = value.keySet();
                         Iterator it = cles.iterator();
-                        Boolean trouv = false;
-                        while (it.hasNext() & !trouv){
-                            String key = (String)it.next();
-                            if(userId.equals(key)){
-                                trouv = true ;
+                        while (it.hasNext() & !trouv) {
+                            String key = (String) it.next();
+                            if (userIdCopie.equals(key)) {
+                                trouv = true;
                             }
                         }
-                        getter.onResult(trouv);
                     }
                 }
+                getter.onResult(trouv);
             }
 
             @Override

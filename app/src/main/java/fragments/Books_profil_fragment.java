@@ -63,11 +63,12 @@ public class Books_profil_fragment extends Fragment {
         book_listView = view.findViewById(R.id.books_list);
         progressBar =  view.findViewById(R.id.progressBar);
 
+        progressBar.setVisibility(View.VISIBLE);
+        book_listView.setVisibility(View.GONE);
+
         if(savedInstanceState == null || !savedInstanceState.containsKey("key")) {
 
             final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
-            progressBar.setVisibility(View.VISIBLE);
-            book_listView.setVisibility(View.GONE);
             dataBaseManager.getUserIsbnBooksList(userId, new DataBaseManager.ResultGetter<ArrayList<Book>>() {
                 @Override
                 public void onResult(final ArrayList<Book> booksList) {
@@ -94,7 +95,9 @@ public class Books_profil_fragment extends Fragment {
                         }
                     }.execute();
 
-
+                    progressBar.setVisibility(View.GONE);
+                    book_listView.setVisibility(View.VISIBLE);
+                    book_listView.setAdapter(booksAdapter);
                 }
             });
         }
@@ -102,7 +105,11 @@ public class Books_profil_fragment extends Fragment {
             my_books_list = savedInstanceState.getParcelableArrayList("key");
             booksAdapter = new Book_List_Adapter(my_books_list, getActivity());
             book_listView.setAdapter(booksAdapter);
+            progressBar.setVisibility(View.GONE);
+            book_listView.setVisibility(View.VISIBLE);
+            book_listView.setAdapter(booksAdapter);
         }
+
         progressBar.setVisibility(View.GONE);
         book_listView.setVisibility(View.VISIBLE);
         book_listView.setAdapter(booksAdapter);

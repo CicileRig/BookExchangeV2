@@ -119,20 +119,26 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
         dataBaseManager.getEventCreatorId(event, new DataBaseManager.ResultGetter<String>() {
             @Override
             public void onResult(String s) {
-                if(currentUser.getUid().equals(s)){
+                if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(s)){
                     viewHolder.linearLayoutParticip.setVisibility(finalConvertView.VISIBLE);
                     viewHolder.participationText.setText("Créateur");
                     viewHolder.participationIcon.setImageResource(R.drawable.ic_creator);
+                }else{
+                    viewHolder.linearLayoutParticip.setVisibility(finalConvertView.GONE);
                 }
             }
         });
 
-        dataBaseManager.checkIfUserGoToEvent(event, currentUser.getUid(), new DataBaseManager.ResultGetter<Boolean>() {
+        dataBaseManager.checkIfUserGoToEvent(event, FirebaseAuth.getInstance().getCurrentUser().getUid(), new DataBaseManager.ResultGetter<Boolean>() {
             @Override
             public void onResult(Boolean aBoolean) {
-                viewHolder.linearLayoutParticip.setVisibility(finalConvertView.VISIBLE);
-                viewHolder.participationText.setText("J y vais");
-                viewHolder.participationIcon.setImageResource(R.drawable.ic_heart);
+                if(aBoolean == true){
+                    viewHolder.linearLayoutParticip.setVisibility(finalConvertView.VISIBLE);
+                    viewHolder.participationText.setText("J y vais");
+                    viewHolder.participationIcon.setImageResource(R.drawable.ic_heart);
+                }else{
+                    viewHolder.linearLayoutParticip.setVisibility(finalConvertView.GONE);
+                }
             }
         });
 

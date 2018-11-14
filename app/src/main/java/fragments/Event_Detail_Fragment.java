@@ -1,28 +1,21 @@
 package fragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import activities.NavigationActivity;
-import classes.Book;
 import classes.Event;
 import classes.User;
 import controllers.DataBaseManager;
@@ -36,7 +29,11 @@ public class Event_Detail_Fragment extends BaseFragment {
     private  TextView event_description;
     private  TextView event_place;
     private  ImageView event_image;
-    private Button participate_delete_btn;
+    private Button participate_btn;
+    private ProgressBar progressBar;
+    private LinearLayout participate_layout;
+    private ImageView participationIcon;
+    private TextView participationText;
 
     private ImageManager imageManager = new ImageManager();
     private DataBaseManager dataBaseManager = new DataBaseManager();
@@ -55,7 +52,11 @@ public class Event_Detail_Fragment extends BaseFragment {
         event_place = view.findViewById(R.id.event_place);
         event_description = view.findViewById(R.id.event_description);
         event_image = view.findViewById(R.id.event_photo_d);
-        participate_delete_btn = view.findViewById(R.id.participate_delete_btn);
+        participate_btn = view.findViewById(R.id.participate_delete_btn);
+        progressBar =  view.findViewById(R.id.progressBar);
+        participate_layout =  view.findViewById(R.id.participate_layout);
+        participationIcon= view.findViewById(R.id.imageViewParticip);
+        participationText = view.findViewById(R.id.textViewParticip);
 
         // get the event from the previous intent
         final Event event = (Event) getArguments().getSerializable("event");
@@ -67,57 +68,55 @@ public class Event_Detail_Fragment extends BaseFragment {
         event_place.setText(event.getEvent_place());
         event_description.setText(event.getEvent_description());
         event_image.setImageBitmap(imageManager.decodeBase64(event.getEvent_image_url()));
-        participate_delete_btn.setText("Participer");
+        participate_btn.setText("Participer");
+        progressBar.setVisibility(View.VISIBLE);
+
+        dataBaseManager.checkIfUserGoToEvent(event, FirebaseAuth.getInstance().getCurrentUser().getUid(), new DataBaseManager.ResultGetter<Boolean>() {
+            @Override
+            public void onResult(Boolean aBoolean) {
+                // Si je participe deja
+                if(aBoolean == true){
+                    participate_btn.setVisibility(View.GONE);
+                    participate_layout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                }else{
+                    participate_btn.setVisibility(View.VISIBLE);
+                    participate_layout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
         dataBaseManager.getEventCreatorId(event, new DataBaseManager.ResultGetter<String>() {
             @Override
             public void onResult(String s) {
-            // je ne suis pas le créateur, je participe à l'evenement
-                if(!current.getUid().equals(s)){
-                    dataBaseManager.checkIfUserGoToEvent(event, current.getUid().toString(), new DataBaseManager.ResultGetter<Boolean>() {
-                        @Override
-                        public void onResult(Boolean aBoolean) {
-                            // Si je participe deja
-                            if(aBoolean == true){
-                                participate_delete_btn.setClickable(false);
-                                participate_delete_btn.setEnabled(false);
-                            }// Si j'ai pas deja spécifié que je participe
-                            else {
-                                participate_delete_btn.setText("Participer");
-                            }
-                        }
-                    });
-                }
-                // je suis le créateur, je supprime l'evenement
-                else {
-                    participate_delete_btn.setVisibility(View.GONE);
+            // je sui le créateur
+                if(current.getUid().equals(s)){
+                    participate_btn.setVisibility(View.GONE);
+                    participate_layout.setVisibility(View.VISIBLE);
+                    participationText.setText("Créateur");
+                   participationIcon.setImageResource(R.drawable.ic_creator);
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
 
 
-
-        /************************************ Participate to event / delete  event ********************************/
-        participate_delete_btn.setOnClickListener(new View.OnClickListener() {
+        /************************************ Participate to event ********************************/
+        participate_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 dataBaseManager.getEventCreatorId(event, new DataBaseManager.ResultGetter<String>() {
                     @Override
                     public void onResult(String s) {
-                        // je ne suis pas le créateur, je participe à l'evenement
                         if(!current.getUid().equals(s)){
-                            dataBaseManager.getUserById(current.getUid(), new DataBaseManager.ResultGetter<User>() {
-                                @Override
-                                public void onResult(User user) {
-                                    user.setId(current.getUid());
-                                    dataBaseManager.addParticipantToEvent(event, user);
-
-                                }
-                            });
-                        }else{
-                            participate_delete_btn.setClickable(false);
-                            participate_delete_btn.setEnabled(false);
+                            User user = new User();
+                            user.setId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            user.setMailAdress(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                            dataBaseManager.addParticipantToEvent(event, user);
+                            participate_btn.setVisibility(View.GONE);
+                            participate_layout.setVisibility(View.VISIBLE);
                         }
 
                     }

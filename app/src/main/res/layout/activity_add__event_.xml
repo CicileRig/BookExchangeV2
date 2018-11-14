@@ -189,7 +189,7 @@
                     android:id="@+id/event_image"
                     android:layout_width="150dp"
                     android:layout_height="200dp"
-                    android:background="@drawable/fond_p"
+                    android:src="@drawable/fond_p"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

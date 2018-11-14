@@ -65,8 +65,19 @@ public class ProfilActivity extends AppCompatActivity {
 
         /*************************************** Display user informations ****************************************/
 
+
         SharedPreferences prefs = getSharedPreferences("SESSION", MODE_PRIVATE);
-        userTextView.setText(prefs.getString("name", null)+" "+prefs.getString("surname", null));
+        if(prefs.getString("name", null) != null &&  prefs.getString("surname", null) != null)
+        {
+            userTextView.setText(prefs.getString("name", null)+" "+prefs.getString("surname", null));
+        }else{
+            dataBaseManager.getUserById(FirebaseAuth.getInstance().getCurrentUser().getUid(), new DataBaseManager.ResultGetter<User>() {
+                @Override
+                public void onResult(User user) {
+                    userTextView.setText(user.getName()+" "+user.getSurname());
+                }
+            });
+        }
 
         dataBaseManager.getUserById(FirebaseAuth.getInstance().getCurrentUser().getUid(), new DataBaseManager.ResultGetter<User>() {
             @Override
