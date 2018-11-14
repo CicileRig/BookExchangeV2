@@ -42,6 +42,7 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
         LinearLayout linearLayoutParticip;
         ImageView participationIcon;
         TextView participationText;
+        TextView participantNumber;
     }
 
     public Event_List_Adapter(ArrayList<Event> data, Activity activity) {
@@ -92,6 +93,7 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
             viewHolder.linearLayoutParticip = convertView.findViewById(R.id.participate_layout);
             viewHolder.participationIcon= convertView.findViewById(R.id.imageViewParticip);
             viewHolder.participationText = convertView.findViewById(R.id.textViewParticip);
+            viewHolder.participantNumber = convertView.findViewById(R.id.participants_number);
 
             result=convertView;
 
@@ -106,9 +108,16 @@ public class Event_List_Adapter extends ArrayAdapter<Event> implements View.OnCl
         lastPosition = position;
 
         viewHolder.eventName.setText(event.getEvent_name());
-        viewHolder.eventDate.setText(event.getEvent_date());
-        viewHolder.eventHour.setText("A : " +event.getEvent_hour());
-        viewHolder.eventPlace.setText(event.getEvent_place());
+        viewHolder.eventDate.setText("Le "+event.getEvent_date());
+        viewHolder.eventHour.setText("A " +event.getEvent_hour());
+        viewHolder.eventPlace.setText("A l'adresse : "+event.getEvent_place());
+
+        dataBaseManager.getEventParticipantNumber(event , new DataBaseManager.ResultGetter<String>() {
+            @Override
+            public void onResult(String s) {
+                viewHolder.participantNumber.setText(s+" Participant (s)");
+            }
+        });
 
         if(event.getEvent_image_url() != null){
             ImageManager imageManager = new ImageManager();

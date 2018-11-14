@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bcs.bookexchangev2.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +35,7 @@ public class Event_Detail_Fragment extends BaseFragment {
     private LinearLayout participate_layout;
     private ImageView participationIcon;
     private TextView participationText;
+    private TextView participantsNumber ;
 
     private ImageManager imageManager = new ImageManager();
     private DataBaseManager dataBaseManager = new DataBaseManager();
@@ -57,16 +59,27 @@ public class Event_Detail_Fragment extends BaseFragment {
         participate_layout =  view.findViewById(R.id.participate_layout);
         participationIcon= view.findViewById(R.id.imageViewParticip);
         participationText = view.findViewById(R.id.textViewParticip);
+        participantsNumber = view.findViewById(R.id.participants_number);
 
         // get the event from the previous intent
         final Event event = (Event) getArguments().getSerializable("event");
 
         // display event informations
         event_title.setText(event.getEvent_name());
-        event_date.setText(event.getEvent_date());
-        event_hour.setText(event.getEvent_hour());
-        event_place.setText(event.getEvent_place());
+        event_date.setText("Le "+event.getEvent_date());
+        event_hour.setText("A "+event.getEvent_hour());
+        event_place.setText("A l'adresse "+event.getEvent_place());
         event_description.setText(event.getEvent_description());
+        dataBaseManager.getEventParticipantNumber(event, new DataBaseManager.ResultGetter<String>() {
+            @Override
+            public void onResult(String s) {
+                if(s.equals("")){
+                    participantsNumber.setText("");
+                }else{
+                    participantsNumber.setText(s+" Participant(s)");
+                }
+            }
+        });
         event_image.setImageBitmap(imageManager.decodeBase64(event.getEvent_image_url()));
         participate_btn.setText("Participer");
         progressBar.setVisibility(View.VISIBLE);

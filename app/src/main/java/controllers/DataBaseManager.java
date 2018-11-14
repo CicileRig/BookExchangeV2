@@ -146,6 +146,36 @@ public class DataBaseManager {
         });
         return;
     }
+
+    // recuperer le nommbre de participant à un evenement
+    public void getEventParticipantNumber(Event event, final ResultGetter<String> getter){
+
+        myUsersRef = database.getReference("events").child(securityManager.md5Hash(event.getEvent_name())).child("participants");
+        myUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot != null){
+                    HashMap value = (HashMap)dataSnapshot.getValue();
+                    if (value != null){
+                        Set cles = value.keySet();
+                        getter.onResult(Integer.toString(cles.size()+1));
+                    }else{
+                        getter.onResult(Integer.toString(1));
+                    }
+                }else{
+                    getter.onResult(Integer.toString(1));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     // le nombre de livres de l'utilisateur actuel
     public void getCUserBookNumber(final ResultGetter<String> getter){
 
