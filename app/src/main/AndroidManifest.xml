@@ -22,7 +22,6 @@
         <activity android:name="activities.ProfilActivity" android:screenOrientation="portrait" ></activity>
         <activity android:name="activities.NavigationActivity" android:screenOrientation="portrait" ></activity>
         <activity android:name="activities.RegistrationActivity2" android:screenOrientation="portrait" />
-        <activity android:name="activities.APIActivity" android:screenOrientation="portrait" />
         <activity android:name="activities.Add_Book_Activity" android:screenOrientation="portrait" />
         <activity android:name="activities.Add_Event_Activity" android:screenOrientation="portrait" ></activity>
         <activity android:name=".ModifyProfil" android:screenOrientation="portrait" ></activity>
