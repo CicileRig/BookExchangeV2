@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.bcs.bookexchangev2.ModifyProfil;
 import com.example.bcs.bookexchangev2.R;
 import com.google.firebase.auth.FirebaseAuth;
 

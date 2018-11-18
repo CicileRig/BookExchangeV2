@@ -1,4 +1,4 @@
-package com.example.bcs.bookexchangev2;
+package activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,13 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.bcs.bookexchangev2.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 
-import activities.ProfilActivity;
-import activities.RegistrationActivity2;
 import classes.User;
 import controllers.DataBaseManager;
 import controllers.ImageManager;
